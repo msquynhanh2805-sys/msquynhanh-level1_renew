@@ -79,6 +79,19 @@
     <!-- ========================================== -->  
     <section id="slide1" class="space-y-6 animate-pop-in py-2">  
       
+      <!-- Resume Progress Banner (Chỉ hiện khi có tiến độ lưu) -->
+      <div id="resumeBanner" class="hidden glass-card rounded-3xl p-5 border-2 border-teal-400 bg-teal-50/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="font-bold text-slate-800 text-sm">📌 Tìm thấy tiến độ dở dang!</h4>
+          <p id="resumeBannerText" class="text-xs text-slate-600 mt-0.5">Bạn đang học dở bài...</p>
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button onclick="resumeSavedSession()" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition-all shadow-md">
+            ▶️ Học tiếp ngay
+          </button>
+        </div>
+      </div>
+
       <!-- Greeting Banner -->  
       <div class="glass-card rounded-3xl p-6 text-center border border-white space-y-3">  
         <div class="fixed-welcome-box max-w-2xl mx-auto w-full">  
@@ -184,11 +197,16 @@
     <!-- ========================================== -->  
     <section id="slide2" class="hidden space-y-4 py-4 animate-pop-in">  
       
-      <!-- Progress Bar -->  
+      <!-- Progress Bar + Control Buttons -->  
       <div class="glass-card rounded-2xl p-4 space-y-2">  
         <div class="flex justify-between items-center text-xs text-slate-600 font-semibold">  
           <span id="currentModeTitle">📖 词汇复习 / Ôn từ vựng</span>  
-          <span id="currentProgressCounter">Đã ôn: 0 từ</span>  
+          <div class="flex items-center gap-3">
+            <span id="currentProgressCounter">Đã ôn: 0 từ</span>  
+            <button onclick="pauseAndExitSession()" class="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] rounded-lg transition-all shadow-sm">
+              ⏸️ Tạm dừng / Kết thúc
+            </button>
+          </div>
         </div>  
         <div class="w-full bg-slate-200/80 rounded-full h-2.5 overflow-hidden">  
           <div id="practiceProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>  
@@ -216,7 +234,7 @@
 
         <hr class="border-slate-100">  
 
-        <!-- Interactive Area (Trắc nghiệm / Sắp xếp / Luyện gõ) -->  
+        <!-- Interactive Area -->  
         <div id="interactiveContent" class="min-h-[160px] flex flex-col justify-center"></div>  
 
         <!-- Feedback Box -->  
@@ -225,13 +243,26 @@
           <p id="feedbackTextVi" class="text-xs mt-1 opacity-90"></p>  
         </div>  
 
-        <!-- Action Check Button (Dành cho Sắp xếp / Gõ chữ) -->  
+        <!-- Action Check Button -->  
         <div id="checkBtnContainer" class="hidden pt-2">  
           <button id="btnCheckAnswer" onclick="checkCurrentAnswer()" class="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base transition-all shadow-md shadow-teal-600/20">  
             检查答案 / Kiểm tra đáp án  
           </button>  
         </div>  
       </div>  
+
+      <!-- Incorrect Answers Summary Section (Chỉ hiện khi dừng bài hoặc hoàn thành bài có câu sai) -->
+      <div id="wrongQuestionsSummary" class="hidden glass-card rounded-3xl p-6 space-y-4 animate-pop-in border border-rose-200">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+          <h3 class="font-extrabold text-rose-700 text-base flex items-center gap-2">
+            ❌ Xem lại các câu trả lời sai (<span id="wrongCount">0</span>)
+          </h3>
+          <button onclick="retryWrongQuestions()" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-all shadow-sm">
+            🔄 Luyện tập lại các câu sai
+          </button>
+        </div>
+        <div id="wrongQuestionsList" class="space-y-3 max-h-80 overflow-y-auto pr-1"></div>
+      </div>
 
       <!-- Continuation Menu -->  
       <div id="continuationMenu" class="hidden glass-card rounded-3xl p-6 space-y-4 animate-pop-in border border-teal-200 text-center">  
@@ -326,8 +357,19 @@
   <!-- SCRIPT ENGINE -->  
   <script>  
     // ==========================================
-    // 1. CÂU CHÀO & LỜI CHÚC TÚI MÙ
+    // 0. MẪU DỮ LIỆU TỪ VỰNG (Bao gồm 30 bài mẫu)
     // ==========================================
+    const VOCAB_DATABASE = Array.from({ length: 300 }, (_, i) => {
+      const lessonNum = Math.floor(i / 10) + 1;
+      return {
+        lesson: lessonNum,
+        cn: `词汇 ${i + 1}`,
+        pinyin: `cí huì ${i + 1}`,
+        vi: `Từ vựng ${i + 1} (Bài ${lessonNum})`,
+        exCn: `这是第${lessonNum}课的例句${i + 1}。`
+      };
+    });
+
     const WELCOME_QUOTES = [
       { cn: "👋 欢迎回来！今天也要加油哦～", vi: "Chào mừng bạn quay lại! Hôm nay cũng cố gắng nhé～" },
       { cn: "🌿 欢迎回来！一点一点，慢慢变熟悉。", vi: "Chào mừng bạn quay lại! Từng chút một, từ từ trở nên quen thuộc." },
@@ -355,7 +397,73 @@
     let selectedLessons = [1];
     let sessionQuestions = [];
     let currentIndex = 0;
+    let wrongQuestions = [];
     let selectedArrangeWords = [];
+
+    // Tự động kiểm tra tiến độ đã lưu khi tải trang
+    window.addEventListener('DOMContentLoaded', () => {
+      checkSavedProgress();
+      initSlide1();
+    });
+
+    function saveProgress() {
+      const dataToSave = {
+        selectedMode,
+        selectedScope,
+        selectedLessons,
+        sessionQuestions,
+        currentIndex,
+        wrongQuestions,
+        timestamp: new Date().getTime()
+      };
+      localStorage.setItem('hantalk_level2_progress', JSON.stringify(dataToSave));
+    }
+
+    function checkSavedProgress() {
+      const saved = localStorage.getItem('hantalk_level2_progress');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.sessionQuestions && parsed.sessionQuestions.length > 0 && parsed.currentIndex < parsed.sessionQuestions.length) {
+            document.getElementById('resumeBanner').classList.remove('hidden');
+            const total = parsed.sessionQuestions.length;
+            const current = parsed.currentIndex;
+            document.getElementById('resumeBannerText').textContent = `Bạn đã làm đến câu ${current + 1}/${total} (Chế độ: ${parsed.selectedMode.toUpperCase()})`;
+          } else {
+            document.getElementById('resumeBanner').classList.add('hidden');
+          }
+        } catch (e) {
+          console.error("Lỗi đọc tiến độ", e);
+        }
+      } else {
+        document.getElementById('resumeBanner').classList.add('hidden');
+      }
+    }
+
+    function resumeSavedSession() {
+      const saved = localStorage.getItem('hantalk_level2_progress');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        selectedMode = parsed.selectedMode;
+        selectedScope = parsed.selectedScope;
+        selectedLessons = parsed.selectedLessons;
+        sessionQuestions = parsed.sessionQuestions;
+        currentIndex = parsed.currentIndex;
+        wrongQuestions = parsed.wrongQuestions || [];
+
+        document.getElementById('continuationMenu').classList.add('hidden');
+        document.getElementById('wrongQuestionsSummary').classList.add('hidden');
+        document.getElementById('mainExerciseCard').classList.remove('hidden');
+
+        goToSlide(2);
+        renderCurrentQuestion();
+      }
+    }
+
+    function clearSavedProgress() {
+      localStorage.removeItem('hantalk_level2_progress');
+      document.getElementById('resumeBanner').classList.add('hidden');
+    }
 
     // Chuyển đổi Slide
     function goToSlide(slideNum) {
@@ -366,8 +474,13 @@
       document.getElementById(`slide${slideNum}`).classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      if (slideNum === 1) initSlide1();
-      else if (slideNum === 3) initSlide3();
+      if (slideNum === 1) {
+        checkSavedProgress();
+        initSlide1();
+      } else if (slideNum === 3) {
+        clearSavedProgress();
+        initSlide3();
+      }
     }
 
     function initSlide1() {
@@ -484,21 +597,24 @@
 
       sessionQuestions = filtered.sort(() => 0.5 - Math.random());
       currentIndex = 0;
+      wrongQuestions = [];
 
       document.getElementById('continuationMenu').classList.add('hidden');
+      document.getElementById('wrongQuestionsSummary').classList.add('hidden');
       document.getElementById('mainExerciseCard').classList.remove('hidden');
 
+      saveProgress();
       goToSlide(2);
       renderCurrentQuestion();
     }
 
     function renderCurrentQuestion() {
       if (currentIndex >= sessionQuestions.length) {
-        document.getElementById('mainExerciseCard').classList.add('hidden');
-        document.getElementById('continuationMenu').classList.remove('hidden');
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        finishSession();
         return;
       }
+
+      saveProgress();
 
       const q = sessionQuestions[currentIndex];
       const progress = Math.round(((currentIndex) / sessionQuestions.length) * 100);
@@ -551,7 +667,8 @@
           if (opt === q.vi) {
             showFeedback(true, "正确！/ Chính xác!", `${q.cn} (${q.pinyin}): ${q.vi}`);
           } else {
-            showFeedback(false, "再试一次！/ Thử lại nhé!", `Đáp án đúng là: ${q.vi}`);
+            recordWrongAnswer(q, opt, q.vi);
+            showFeedback(false, "再试一次！/ Chưa chính xác!", `Đáp án đúng là: ${q.vi}`);
           }
         };
         grid.appendChild(btn);
@@ -624,6 +741,16 @@
       window.currentCheckType = 'typing';
     }
 
+    function recordWrongAnswer(question, userAns, correctAns) {
+      if (!wrongQuestions.some(w => w.question.cn === question.cn)) {
+        wrongQuestions.push({
+          question,
+          userAns: userAns || "Chưa nhập/sai",
+          correctAns
+        });
+      }
+    }
+
     function checkCurrentAnswer() {
       const q = sessionQuestions[currentIndex];
       if (window.currentCheckType === 'arrange') {
@@ -631,52 +758,106 @@
         if (userStr === window.currentAnswerTarget) {
           showFeedback(true, "太棒了！/ Xuất sắc!", `${q.exCn || q.cn}`);
         } else {
-          showFeedback(false, "加油！/ Cố lên nào!", `Đáp án đúng: ${window.currentAnswerTarget}`);
+          recordWrongAnswer(q, userStr, window.currentAnswerTarget);
+          showFeedback(false, "加油！/ Chưa chính xác!", `Đáp án đúng: ${window.currentAnswerTarget}`);
         }
       } else if (window.currentCheckType === 'typing') {
         const val = document.getElementById('typingInput').value.trim();
         if (val === window.currentAnswerTarget || val.toLowerCase() === q.pinyin.toLowerCase()) {
-          showFeedback(true, "正确！/ Chính xác!", `${q.cn} - ${q.pinyin}`);
+          showFeedback(true, "太棒了！/ Xuất sắc!", `${q.cn} (${q.pinyin})`);
         } else {
-          showFeedback(false, "再试一次！/ Hãy thử lại!", `Đáp án đúng: ${q.cn} (${q.pinyin})`);
+          recordWrongAnswer(q, val, `${q.cn} / ${q.pinyin}`);
+          showFeedback(false, "加油！/ Chưa chính xác!", `Đáp án đúng: ${q.cn} (${q.pinyin})`);
         }
       }
     }
 
-    function showFeedback(isCorrect, textCn, textVi) {
-      const box = document.getElementById('feedbackBox');
-      box.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+    function showFeedback(isCorrect, cnText, viText) {
+      const fb = document.getElementById('feedbackBox');
+      fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
 
       if (isCorrect) {
-        box.classList.add('bg-emerald-100', 'text-emerald-800');
-        confetti({ particleCount: 30, spread: 60, origin: { y: 0.7 } });
+        fb.classList.add('bg-emerald-100', 'text-emerald-800');
       } else {
-        box.classList.add('bg-rose-100', 'text-rose-800');
+        fb.classList.add('bg-rose-100', 'text-rose-800');
       }
 
-      document.getElementById('feedbackTextCn').textContent = textCn;
-      document.getElementById('feedbackTextVi').textContent = textVi;
+      document.getElementById('feedbackTextCn').textContent = cnText;
+      document.getElementById('feedbackTextVi').textContent = viText;
 
       setTimeout(() => {
         currentIndex++;
         renderCurrentQuestion();
-      }, 1800);
+      }, 1600);
     }
 
-    function speakCurrentText() {
-      const text = document.getElementById('cardChinese').textContent;
-      if ('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'zh-CN';
-        window.speechSynthesis.speak(msg);
+    function pauseAndExitSession() {
+      saveProgress();
+      document.getElementById('mainExerciseCard').classList.add('hidden');
+      renderWrongQuestionsList();
+      document.getElementById('continuationMenu').classList.remove('hidden');
+    }
+
+    function finishSession() {
+      clearSavedProgress();
+      document.getElementById('mainExerciseCard').classList.add('hidden');
+      renderWrongQuestionsList();
+      document.getElementById('continuationMenu').classList.remove('hidden');
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function renderWrongQuestionsList() {
+      const summaryBox = document.getElementById('wrongQuestionsSummary');
+      const listContainer = document.getElementById('wrongQuestionsList');
+
+      if (wrongQuestions.length === 0) {
+        summaryBox.classList.add('hidden');
+        return;
       }
+
+      summaryBox.classList.remove('hidden');
+      document.getElementById('wrongCount').textContent = wrongQuestions.length;
+      listContainer.innerHTML = '';
+
+      wrongQuestions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl bg-white border border-rose-100 shadow-sm flex flex-col gap-1 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between font-bold text-slate-800">
+            <span>${index + 1}. Bài ${item.question.lesson}: ${item.question.cn} (${item.question.pinyin})</span>
+            <span class="text-slate-500">${item.question.vi}</span>
+          </div>
+          <div class="text-rose-600">❌ Bạn chọn/nhập: <span class="font-semibold">${item.userAns}</span></div>
+          <div class="text-emerald-600">✅ Đáp án đúng: <span class="font-semibold">${item.correctAns}</span></div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function retryWrongQuestions() {
+      sessionQuestions = wrongQuestions.map(w => w.question);
+      wrongQuestions = [];
+      currentIndex = 0;
+
+      document.getElementById('wrongQuestionsSummary').classList.add('hidden');
+      document.getElementById('continuationMenu').classList.add('hidden');
+      document.getElementById('mainExerciseCard').classList.remove('hidden');
+
+      saveProgress();
+      renderCurrentQuestion();
     }
 
     function continueNextMode(mode) {
       selectedMode = mode;
       currentIndex = 0;
+      wrongQuestions = [];
+      sessionQuestions = sessionQuestions.sort(() => 0.5 - Math.random());
+
       document.getElementById('continuationMenu').classList.add('hidden');
+      document.getElementById('wrongQuestionsSummary').classList.add('hidden');
       document.getElementById('mainExerciseCard').classList.remove('hidden');
+
+      saveProgress();
       renderCurrentQuestion();
     }
 
@@ -686,18 +867,24 @@
     }
 
     function openGiftBox(idx) {
-      document.getElementById('giftGrid').classList.add('hidden');
       const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
-
       document.getElementById('quoteChinese').textContent = quote.cn;
       document.getElementById('quoteVietnamese').textContent = quote.vi;
 
+      document.getElementById('giftGrid').classList.add('hidden');
       document.getElementById('revealedQuoteArea').classList.remove('hidden');
-      confetti({ particleCount: 80, spread: 80, origin: { y: 0.5 } });
+
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.5 } });
     }
 
-    // Khởi tạo ban đầu
-    initSlide1();
+    function speakCurrentText() {
+      const text = document.getElementById('cardChinese').textContent;
+      if ('speechSynthesis' in window && text && text !== '--') {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        window.speechSynthesis.speak(utterance);
+      }
+    }
   </script>  
 </body>  
 </html>
