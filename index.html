@@ -17,72 +17,45 @@
       user-select: none;  
     }  
     .glass-card {  
-      background: rgba(255, 255, 255, 0.88);  
+      background: rgba(255, 255, 255, 0.9);  
       backdrop-filter: blur(16px);  
       -webkit-backdrop-filter: blur(16px);  
       border: 1px solid rgba(255, 255, 255, 0.7);  
-      box-shadow: 0 20px 40px -15px rgba(20, 184, 166, 0.08), 0 0 15px rgba(0, 0, 0, 0.02);  
+      box-shadow: 0 20px 40px -15px rgba(20, 184, 166, 0.08);  
     }  
     @keyframes float {  
-      0%, 100% { transform: translateY(0px) rotate(0deg); }  
-      50% { transform: translateY(-8px) rotate(1deg); }  
-    }  
-    @keyframes gentleBounce {  
-      0%, 100% { transform: translateY(0); }  
-      50% { transform: translateY(-6px); }  
-    }  
-    @keyframes ribbonShake {  
-      0%, 100% { transform: rotate(0deg); }  
-      25% { transform: rotate(-4deg); }  
-      75% { transform: rotate(4deg); }  
-    }  
-    @keyframes boxShake {  
-      0%, 100% { transform: translateX(0); }  
-      20% { transform: translateX(-6px) rotate(-3deg); }  
-      40% { transform: translateX(6px) rotate(3deg); }  
-      60% { transform: translateX(-4px) rotate(-2deg); }  
-      80% { transform: translateX(4px) rotate(2deg); }  
+      0%, 100% { transform: translateY(0px); }  
+      50% { transform: translateY(-8px); }  
     }  
     @keyframes popIn {  
       0% { transform: scale(0.97); opacity: 0; }  
       100% { transform: scale(1); opacity: 1; }  
     }  
-
     .animate-float { animation: float 6s ease-in-out infinite; }  
-    .animate-gift-idle { animation: gentleBounce 3s ease-in-out infinite; }  
-    .gift-card:hover .gift-ribbon { animation: ribbonShake 0.6s ease-in-out infinite; }  
-    .gift-shake { animation: boxShake 0.5s ease-in-out infinite; }  
     .animate-pop-in { animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }  
 
-    /* Khung text cố định cho câu mở đầu & câu động viên */
-    .fixed-welcome-box {
-      min-height: 110px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .fixed-quote-box {  
-      min-height: 140px;  
+    .fixed-welcome-box {  
+      min-height: 80px;  
       display: flex;  
       flex-direction: column;  
       justify-content: center;  
       align-items: center;  
     }  
-
-    ::-webkit-scrollbar { width: 6px; height: 6px; }  
-    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); }  
-    ::-webkit-scrollbar-thumb { background: rgba(20, 184, 166, 0.3); border-radius: 999px; }  
-    ::-webkit-scrollbar-thumb:hover { background: rgba(20, 184, 166, 0.5); }  
+    .fixed-quote-box {  
+      min-height: 120px;  
+      display: flex;  
+      flex-direction: column;  
+      justify-content: center;  
+      align-items: center;  
+    }  
   </style>  
 </head>  
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">  
-  
+
   <!-- Background Decor -->  
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">  
     <div class="absolute -top-24 -left-24 w-96 h-96 bg-teal-200/40 rounded-full blur-3xl animate-float"></div>  
     <div class="absolute top-1/3 -right-24 w-96 h-96 bg-emerald-200/40 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>  
-    <div class="absolute -bottom-24 left-1/3 w-96 h-96 bg-amber-100/50 rounded-full blur-3xl animate-float" style="animation-delay: -4s;"></div>  
   </div>  
 
   <!-- Header -->  
@@ -102,55 +75,24 @@
   <main class="relative z-10 max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col justify-center">  
 
     <!-- ========================================== -->  
-    <!-- SLIDE 1: TRANG CHÀO MỪNG                  -->  
+    <!-- SLIDE 1: TRANG CHÀO MỪNG & CHỌN NỘI DUNG   -->  
     <!-- ========================================== -->  
-    <section id="slide1" class="space-y-6 my-auto py-4 animate-pop-in">  
-      <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden flex flex-col items-center justify-center text-center gap-6 border border-white">  
-        
-        <div class="fixed-welcome-box max-w-2xl mx-auto w-full px-2">  
-          <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight leading-snug">  
-            <span id="slide1GreetingCn" class="block">🌱 欢迎回来！有时间的时候，回来看看吧。</span>  
-            <span id="slide1GreetingVi" class="block text-sm md:text-base font-medium text-teal-600 mt-2">  
+    <section id="slide1" class="space-y-6 animate-pop-in py-2">  
+      
+      <!-- Greeting Banner -->  
+      <div class="glass-card rounded-3xl p-6 text-center border border-white space-y-3">  
+        <div class="fixed-welcome-box max-w-2xl mx-auto w-full">  
+          <h2 class="text-lg md:text-xl font-extrabold text-slate-800 tracking-tight leading-snug">  
+            <span id="slide1GreetingCn" class="block text-teal-800">🌱 欢迎回来！有时间的时候，回来看看吧。</span>  
+            <span id="slide1GreetingVi" class="block text-xs md:text-sm font-medium text-teal-600 mt-1">  
               Chào mừng bạn quay lại! Khi có thời gian, hãy ghé qua ôn một chút nhé.  
             </span>  
           </h2>  
         </div>  
-
-        <div class="text-xs font-semibold text-slate-500">  
-          ✨ 每天进步一点点 / Mỗi ngày tiến bộ một chút  
-        </div>  
-
-        <!-- Resume Card nếu có phiên tạm dừng -->  
-        <div id="slide1ResumeCard" class="hidden w-full max-w-md">  
-          <div class="glass-card bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border-teal-300/50 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm text-left">  
-            <div class="flex items-center space-x-3">  
-              <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center text-lg shrink-0">🌱</div>  
-              <div>  
-                <h3 class="font-bold text-slate-800 text-xs">🌱 继续复习 / Tiếp tục ôn tập</h3>  
-                <p id="slide1ResumeText" class="text-xs text-slate-600 mt-0.5">Bạn đang dừng ở: Bài 1 · Câu 1</p>  
-              </div>  
-            </div>  
-            <button onclick="resumeSavedSession()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs transition-all shadow-md shrink-0">  
-              ▶️ Tiếp tục  
-            </button>  
-          </div>  
-        </div>  
-
-        <div>  
-          <button onclick="goToSlide(2)" class="px-10 py-4 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-base md:text-lg shadow-xl shadow-teal-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2">  
-            <span>▶️ 开始复习 / Bắt đầu ôn tập</span>  
-          </button>  
-        </div>  
       </div>  
-    </section>  
 
-    <!-- ========================================== -->  
-    <!-- SLIDE 2: TRANG HỌC TẬP TÍCH HỢP            -->  
-    <!-- ========================================== -->  
-    <section id="slide2" class="hidden space-y-6 animate-pop-in py-4">  
-      
-      <!-- Top Control Panel -->  
-      <div id="slide2ControlPanel" class="space-y-5">  
+      <!-- Controls Panel -->  
+      <div class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border border-white">  
         
         <!-- 1. CHỌN CÁCH LUYỆN TẬP -->  
         <div class="space-y-3">  
@@ -192,7 +134,7 @@
             <button id="btnScopeSingle" onclick="openSingleLessonPicker()" class="px-4 py-3 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium text-xs flex items-center justify-between text-left transition-all shadow-sm">  
               <div>  
                 <p class="font-bold text-xs text-slate-800">📖 按课练习 / Luyện theo bài</p>  
-                <p id="scopeSingleText" class="text-[11px] text-slate-500">Chọn 1 bài cụ thể</p>  
+                <p id="scopeSingleText" class="text-[11px] text-slate-500">Bài 1</p>  
               </div>  
               <i class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>  
             </button>  
@@ -214,148 +156,110 @@
             </button>  
           </div>  
 
-          <!-- Area Selector Popovers -->
-          <div id="lessonPickerContainer" class="hidden glass-card rounded-2xl p-4 border border-teal-200 animate-pop-in mt-2">
-            <div id="singleLessonGrid" class="hidden grid grid-cols-5 sm:grid-cols-10 gap-2"></div>
-            <div id="multiLessonGrid" class="hidden space-y-3">
-              <div class="grid grid-cols-5 sm:grid-cols-10 gap-2"></div>
-              <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                <button onclick="confirmMultiLessons()" class="px-4 py-1.5 rounded-xl bg-teal-600 text-white text-xs font-bold">
-                  确定 / Xác nhận
-                </button>
-              </div>
-            </div>
-          </div>
+          <!-- Container Bảng chọn bài -->  
+          <div id="lessonPickerContainer" class="hidden glass-card rounded-2xl p-4 border border-teal-200 animate-pop-in mt-2">  
+            <div id="singleLessonGrid" class="hidden grid grid-cols-5 sm:grid-cols-10 gap-2"></div>  
+            <div id="multiLessonGrid" class="hidden space-y-3">  
+              <div class="grid grid-cols-5 sm:grid-cols-10 gap-2"></div>  
+              <div class="flex justify-end pt-2 border-t border-slate-100">  
+                <button onclick="confirmMultiLessons()" class="px-4 py-1.5 rounded-xl bg-teal-600 text-white text-xs font-bold">  
+                  确定 / Xác nhận  
+                </button>  
+              </div>  
+            </div>  
+          </div>  
         </div>  
 
-        <div class="text-center pt-1">  
-          <button onclick="startSession()" class="w-full sm:w-auto px-10 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/20 transition-all">  
+        <div class="text-center pt-2">  
+          <button onclick="startSession()" class="w-full sm:w-auto px-10 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-base shadow-xl shadow-teal-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">  
             🚀 开始学习 / Bắt đầu học ngay  
           </button>  
         </div>  
 
       </div>  
+    </section>  
 
-      <!-- Active Practice Workspace Area -->  
-      <div id="slide2PracticeArea" class="hidden space-y-4">  
+    <!-- ========================================== -->  
+    <!-- SLIDE 2: KHU VỰC THỰC HÀNH / LÀM BÀI        -->  
+    <!-- ========================================== -->  
+    <section id="slide2" class="hidden space-y-4 py-4 animate-pop-in">  
+      
+      <!-- Progress Bar -->  
+      <div class="glass-card rounded-2xl p-4 space-y-2">  
+        <div class="flex justify-between items-center text-xs text-slate-600 font-semibold">  
+          <span id="currentModeTitle">📖 词汇复习 / Ôn từ vựng</span>  
+          <span id="currentProgressCounter">Đã ôn: 0 từ</span>  
+        </div>  
+        <div class="w-full bg-slate-200/80 rounded-full h-2.5 overflow-hidden">  
+          <div id="practiceProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>  
+        </div>  
+      </div>  
+
+      <!-- Card Thẻ làm bài -->  
+      <div id="mainExerciseCard" class="glass-card rounded-3xl p-6 md:p-8 space-y-6 relative border border-white">  
         
-        <!-- Progress Bar -->  
-        <div class="glass-card rounded-2xl p-4 space-y-2">  
-          <div class="flex justify-between items-center text-xs text-slate-600 font-semibold">  
-            <span id="currentModeTitle">📖 词汇复习 / Ôn từ vựng</span>  
-            <span id="currentProgressCounter">Đã ôn: 0 từ</span>  
+        <div class="text-center space-y-2">  
+          <span id="cardBadge" class="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full border border-teal-200">  
+            第 1 课 / Bài 1  
+          </span>  
+          <h2 id="cardChinese" class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-wide">  
+            --  
+          </h2>  
+          <div id="cardPinyinArea" class="flex items-center justify-center space-x-2">  
+            <span id="cardPinyin" class="text-base text-teal-600 font-semibold">--</span>  
+            <button onclick="speakCurrentText()" class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 hover:bg-teal-200 flex items-center justify-center transition-colors">  
+              <i class="fa-solid fa-volume-high text-xs"></i>  
+            </button>  
           </div>  
-          <div class="w-full bg-slate-200/80 rounded-full h-2.5 overflow-hidden">  
-            <div id="practiceProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>  
-          </div>  
+          <p id="cardVietnameseHint" class="text-xs text-slate-500 italic">--</p>  
         </div>  
 
-        <!-- Exercise Card -->  
-        <div class="glass-card rounded-3xl p-6 md:p-8 space-y-6 relative border border-white">  
-          
-          <div class="text-center space-y-2">  
-            <span id="cardBadge" class="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full border border-teal-200">  
-              第 1 课 / Bài 1  
-            </span>  
-            <h2 id="cardChinese" class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-wide">  
-              --  
-            </h2>  
-            <div id="cardPinyinArea" class="flex items-center justify-center space-x-2">  
-              <span id="cardPinyin" class="text-base text-teal-600 font-medium">--</span>  
-              <button onclick="speakCurrentText()" class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 hover:bg-teal-200 flex items-center justify-center transition-colors">  
-                <i class="fa-solid fa-volume-high text-xs"></i>  
-              </button>  
-            </div>  
-            <p id="cardVietnamese" class="text-sm text-slate-500 italic">--</p>  
-          </div>  
+        <hr class="border-slate-100">  
 
-          <hr class="border-slate-100">  
+        <!-- Interactive Area (Trắc nghiệm / Sắp xếp / Luyện gõ) -->  
+        <div id="interactiveContent" class="min-h-[160px] flex flex-col justify-center"></div>  
 
-          <!-- Dynamic Interaction Box -->  
-          <div id="interactiveContent" class="min-h-[140px] flex flex-col justify-center"></div>  
-
-          <!-- Feedback Box -->  
-          <div id="feedbackBox" class="hidden rounded-2xl p-4 text-center text-sm font-medium transition-all animate-pop-in">  
-            <p id="feedbackTextCn" class="font-bold text-base"></p>  
-            <p id="feedbackTextVi" class="text-xs mt-1 opacity-90"></p>  
-          </div>  
-
-          <!-- Action Check Button -->  
-          <div id="checkBtnContainer" class="pt-2">  
-            <button id="btnCheckAnswer" onclick="checkCurrentAnswer()" class="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base transition-all shadow-md shadow-teal-600/20">  
-              检查答案 / Kiểm tra đáp án  
-            </button>  
-          </div>  
+        <!-- Feedback Box -->  
+        <div id="feedbackBox" class="hidden rounded-2xl p-4 text-center text-sm font-medium transition-all animate-pop-in">  
+          <p id="feedbackTextCn" class="font-bold text-base"></p>  
+          <p id="feedbackTextVi" class="text-xs mt-1 opacity-90"></p>  
         </div>  
 
-        <!-- Continuation Menu (Phần tiếp theo) -->  
-        <div id="continuationMenu" class="hidden glass-card rounded-2xl p-5 space-y-3 animate-pop-in border border-teal-200">  
-          <p class="text-center text-xs font-bold text-teal-800 tracking-wider">  
-            🎉 Phần tiếp theo / 下一部分  
-          </p>  
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-semibold">  
-            <button onclick="continueNextMode('arrange')" class="p-3 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-left border border-teal-200 transition-colors">  
-              🧩 连词成句 / Sắp xếp câu  
-            </button>  
-            <button onclick="continueNextMode('typing')" class="p-3 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-left border border-teal-200 transition-colors">  
-              ⌨️ 打字练习 / Luyện gõ  
-            </button>  
-            <button onclick="continueNextMode('mixed')" class="p-3 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-left border border-teal-200 transition-colors">  
-              🔀 综合练习 / Luyện tập tổng hợp  
-            </button>  
-            <button onclick="backToSelection()" class="p-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-left transition-colors">  
-              📖 换课 / Đổi bài  
-            </button>  
-            <button onclick="pauseSession()" class="p-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-left border border-amber-200 transition-colors">  
-              ⏸️ 暂停 / Tạm dừng  
-            </button>  
-            <button onclick="finishSession()" class="p-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 text-left border border-rose-200 transition-colors">  
-              🌙 结束 / Kết thúc  
-            </button>  
-          </div>  
+        <!-- Action Check Button (Dành cho Sắp xếp / Gõ chữ) -->  
+        <div id="checkBtnContainer" class="hidden pt-2">  
+          <button id="btnCheckAnswer" onclick="checkCurrentAnswer()" class="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base transition-all shadow-md shadow-teal-600/20">  
+            检查答案 / Kiểm tra đáp án  
+          </button>  
         </div>  
+      </div>  
 
-        <!-- Pause Overlay Panel -->  
-        <div id="pausePanel" class="hidden glass-card rounded-2xl p-6 text-center space-y-4 animate-pop-in border border-amber-200 bg-amber-50/30">  
-          <div class="text-3xl">⏸️</div>  
-          <div>  
-            <h4 class="font-bold text-slate-800 text-base">暂停复习 / Tạm dừng ôn tập</h4>  
-            <p class="text-xs text-slate-600 mt-1">Quay lại sau cũng được, tiến độ sẽ được lưu.</p>  
-          </div>  
-          <div class="space-y-2 max-w-xs mx-auto pt-2">  
-            <button onclick="resumeSession()" class="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md">  
-              ▶️ 继续复习 / Tiếp tục ôn tập  
-            </button>  
-            <button onclick="finishSession()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">  
-              🌙 结束本次复习 / Tạm dừng & kết thúc phiên  
-            </button>  
-          </div>  
+      <!-- Continuation Menu -->  
+      <div id="continuationMenu" class="hidden glass-card rounded-3xl p-6 space-y-4 animate-pop-in border border-teal-200 text-center">  
+        <div class="text-3xl">🎉</div>  
+        <div>  
+          <h3 class="font-extrabold text-slate-800 text-lg">完成本组练习！ / Hoàn thành nhóm luyện tập!</h3>  
+          <p class="text-xs text-slate-500 mt-1">Chọn phần tiếp theo bạn muốn thực hiện:</p>  
         </div>  
-
-        <!-- Summary Panel -->  
-        <div id="summaryPanel" class="hidden glass-card rounded-3xl p-6 text-center space-y-4 animate-pop-in">  
-          <div class="text-3xl">🎉</div>  
-          <div class="space-y-1">  
-            <h3 id="summaryTextCn" class="font-extrabold text-slate-800 text-lg">今天复习了0个词。</h3>  
-            <p id="summaryTextVi" class="text-xs text-slate-600">Hôm nay bạn đã ôn 0 từ.</p>  
-            <p id="summaryWrongCountCn" class="text-xs font-semibold text-amber-700 mt-1"></p>  
-          </div>  
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">  
-            <button id="btnRetryWrong" onclick="retryWrongQuestions()" class="hidden px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-md">  
-              🔄 再复习错题 / Ôn lại câu sai  
-            </button>  
-            <button onclick="goToSlide(3)" class="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md">  
-              🌙 结束，期待下次再见 / Kết thúc, hẹn gặp lại lần sau  
-            </button>  
-          </div>  
+        <div class="grid grid-cols-2 gap-3 text-xs font-bold pt-2 max-w-md mx-auto">  
+          <button onclick="continueNextMode('arrange')" class="p-4 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-colors shadow-sm flex items-center justify-center space-x-2">  
+            <span>🧩 连词成句 / Sắp xếp câu</span>  
+          </button>  
+          <button onclick="continueNextMode('typing')" class="p-4 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-colors shadow-sm flex items-center justify-center space-x-2">  
+            <span>⌨️ 打字练习 / Luyện gõ</span>  
+          </button>  
+          <button onclick="goToSlide(1)" class="p-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center space-x-2">  
+            <span>📖 换课 / Đổi bài</span>  
+          </button>  
+          <button onclick="goToSlide(3)" class="p-4 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 transition-colors flex items-center justify-center space-x-2">  
+            <span>🌙 结束 / Kết thúc</span>  
+          </button>  
         </div>  
-
       </div>  
 
     </section>  
 
     <!-- ========================================== -->  
-    <!-- SLIDE 3: TÚI MÙ / HỘP QUÀ                  -->  
+    <!-- SLIDE 3: TÚI MÙ / HỘP QUÀ KẾT THÚC          -->  
     <!-- ========================================== -->  
     <section id="slide3" class="hidden space-y-8 animate-pop-in py-6">  
       <div class="text-center space-y-2 max-w-xl mx-auto">  
@@ -372,29 +276,29 @@
 
       <!-- 3 Gift Boxes Grid -->  
       <div id="giftGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">  
-        <div onclick="openGiftBox(0)" class="gift-card glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-amber-200 hover:border-amber-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
+        <div onclick="openGiftBox(0)" class="glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-amber-200 hover:border-amber-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
           <div class="py-6 space-y-4">  
-            <div id="boxLid0" class="text-6xl gift-ribbon transition-transform animate-gift-idle">🎁</div>  
+            <div class="text-6xl">🎁</div>  
             <p class="text-xs font-semibold text-amber-700">点击打开 / Chạm để mở</p>  
           </div>  
         </div>  
 
-        <div onclick="openGiftBox(1)" class="gift-card glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-teal-200 hover:border-teal-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
+        <div onclick="openGiftBox(1)" class="glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-teal-200 hover:border-teal-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
           <div class="py-6 space-y-4">  
-            <div id="boxLid1" class="text-6xl gift-ribbon transition-transform animate-gift-idle">🎁</div>  
+            <div class="text-6xl">🎁</div>  
             <p class="text-xs font-semibold text-teal-700">点击打开 / Chạm để mở</p>  
           </div>  
         </div>  
 
-        <div onclick="openGiftBox(2)" class="gift-card glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-indigo-200 hover:border-indigo-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
+        <div onclick="openGiftBox(2)" class="glass-card rounded-3xl p-6 text-center cursor-pointer border-2 border-indigo-200 hover:border-indigo-400 hover:scale-105 transition-all duration-300 relative shadow-lg">  
           <div class="py-6 space-y-4">  
-            <div id="boxLid2" class="text-6xl gift-ribbon transition-transform animate-gift-idle">🎁</div>  
+            <div class="text-6xl">🎁</div>  
             <p class="text-xs font-semibold text-indigo-700">点击打开 / Chạm để mở</p>  
           </div>  
         </div>  
       </div>  
 
-      <!-- Revealed Motivational Quote Card -->  
+      <!-- Revealed Quote Area -->  
       <div id="revealedQuoteArea" class="hidden glass-card rounded-3xl p-6 md:p-8 max-w-2xl mx-auto text-center space-y-4 border-2 border-amber-300 bg-amber-50/40 animate-pop-in">  
         <div class="text-2xl text-amber-500">✨</div>  
         
@@ -422,18 +326,14 @@
   <!-- SCRIPT ENGINE -->  
   <script>  
     // ==========================================
-    // 1. DỮ LIỆU CÂU CHÀO MỪNG & ĐỘNG VIÊN
+    // 1. CÂU CHÀO & LỜI CHÚC TÚI MÙ
     // ==========================================
     const WELCOME_QUOTES = [
-      { cn: "👋 欢迎回来！今天也要进步一点点哦～", vi: "Chào mừng bạn quay lại! Hôm nay cũng tiến bộ một chút nhé～" },
+      { cn: "👋 欢迎回来！今天也要加油哦～", vi: "Chào mừng bạn quay lại! Hôm nay cũng cố gắng nhé～" },
       { cn: "🌿 欢迎回来！一点一点，慢慢变熟悉。", vi: "Chào mừng bạn quay lại! Từng chút một, từ từ trở nên quen thuộc." },
       { cn: "🌸 欢迎回来！很高兴又见到你。", vi: "Chào mừng bạn quay lại! Rất vui lại được gặp bạn." },
       { cn: "🌱 欢迎回来！有时间的时候，回来看看吧。", vi: "Chào mừng bạn quay lại! Khi có thời gian, hãy ghé qua ôn một chút nhé." },
-      { cn: "👋 你好！欢迎来到你的中文复习小站。", vi: "Xin chào! Chào mừng bạn đến với góc ôn tập tiếng Trung của mình." },
-      { cn: "🍀 你的中文小天地，欢迎回来！", vi: "Góc nhỏ tiếng Trung của bạn, chào mừng bạn quay lại!" },
-      { cn: "📖 今天学什么？让我们开始吧！", vi: "Hôm nay học gì đây? Cùng bắt đầu nhé!" },
-      { cn: "🌱 今日任务：让中文再靠近你一点！", vi: "Nhiệm vụ hôm nay: để tiếng Trung tiến gần bạn thêm một chút!" },
-      { cn: "☀️ 今天也来打卡吧！", vi: "Hôm nay cũng ghé qua ôn một chút nhé!" }
+      { cn: "📖 今天学什么？让我们开始吧！", vi: "Hôm nay học gì đây? Cùng bắt đầu nhé!" }
     ];
 
     const MOTIVATIONAL_QUOTES = [
@@ -444,61 +344,21 @@
       { cn: "📖 每一次复习，都是在为进步积累力量。", vi: "Mỗi lần ôn tập đều là một lần tích lũy cho sự tiến bộ." },
       { cn: "🍀 坚持自己的节奏，慢慢进步就好。", vi: "Cứ giữ nhịp độ của riêng mình, từ từ tiến bộ là được." },
       { cn: "🌸 今天也完成了一点点，继续加油！", vi: "Hôm nay lại hoàn thành thêm một chút rồi, tiếp tục cố lên nhé!" },
-      { cn: "🪴 别着急，慢慢学，你会越来越熟悉的。", vi: "Đừng vội, cứ từ từ học, bạn sẽ ngày càng quen thuộc hơn." },
-      { cn: "🌙 今天就到这里，辛苦了！", vi: "Hôm nay đến đây thôi, bạn đã vất vả rồi!" },
-      { cn: "💌 感谢今天的几分钟，我们下次再见！", vi: "Cảm ơn bạn vì vài phút hôm nay, hẹn gặp lại lần sau!" },
       { cn: "☕ 今天辛苦了，有空再回来看看吧。", vi: "Hôm nay vất vả rồi, khi có thời gian lại ghé qua nhé." },
-      { cn: "🌱 记住一点，也是一种进步。", vi: "Nhớ thêm được một chút cũng là một sự tiến bộ." },
       { cn: "👏 今天的复习完成啦，给自己一点掌声吧！", vi: "Phần ôn tập hôm nay hoàn thành rồi, hãy tự dành cho mình một tràng pháo tay nhé!" },
-      { cn: "🌸 今天先到这里，期待下次再见。", vi: "Hôm nay tạm dừng ở đây, hẹn gặp bạn lần sau." },
-      { cn: "☀️ 谢谢你的认真，祝你今天一切顺利！", vi: "Cảm ơn sự nghiêm túc của bạn, chúc bạn hôm nay mọi việc thuận lợi!" },
-      { cn: "🌿 不求一次记住，慢慢熟悉就好。", vi: "Không cần nhớ ngay một lần, từ từ quen thuộc là được." },
-      { cn: "🌷 不用每次都学很多，学一点就很好。", vi: "Không cần lần nào cũng học thật nhiều, học một chút cũng rất tốt." },
-      { cn: "✨ 每复习一次，中文就离你更近一点。", vi: "Mỗi lần ôn tập, tiếng Trung lại gần bạn thêm một chút." },
-      { cn: "🍃 今天记住的一个词，也是今天的收获。", vi: "Nhớ được một từ hôm nay cũng là một thu hoạch của hôm nay." },
-      { cn: "🌱 今天多认识一点，明天就少陌生一点。", vi: "Hôm nay biết thêm một chút, ngày mai sẽ bớt xa lạ một chút." },
-      { cn: "🌙 今天的复习，会在以后的某一天帮到你。", vi: "Buổi ôn hôm nay sẽ giúp bạn vào một ngày nào đó sau này." },
-      { cn: "🌼 现在觉得陌生的词，以后会慢慢变熟悉。", vi: "Những từ bây giờ còn thấy xa lạ rồi sẽ dần trở nên quen thuộc." },
-      { cn: "🪴 慢慢学，慢慢记，慢慢成为更好的自己。", vi: "Từ từ học, từ từ ghi nhớ, từ từ trở thành phiên bản tốt hơn của chính mình." },
-      { cn: "🌸 小小的坚持，也会带来大大的改变。", vi: "Những kiên trì nhỏ bé cũng có thể mang đến thay đổi lớn." },
-      { cn: "☀️ 今天的每一点积累，都会成为明天的底气。", vi: "Mỗi chút tích lũy hôm nay sẽ trở thành sự tự tin của ngày mai." },
-      { cn: "🐢 不急着走得快，慢慢走得远。", vi: "Không cần vội đi thật nhanh, cứ từ từ đi thật xa." },
-      { cn: "📚 一个词，一个句子，慢慢就会越来越多。", vi: "Một từ, một câu, từ từ rồi sẽ ngày càng nhiều hơn." },
-      { cn: "🌿 学过的内容，再见一次就会更熟悉。", vi: "Những điều đã học, gặp lại một lần sẽ càng quen thuộc hơn." },
-      { cn: "💛 今天花的这些时间，都很值得。", vi: "Khoảng thời gian bạn dành hôm nay đều rất đáng giá." }
+      { cn: "☀️ 谢谢你的认真，祝你今天一切顺利！", vi: "Cảm ơn sự nghiêm túc của bạn, chúc bạn hôm nay mọi việc thuận lợi!" }
     ];
 
-    // Sample Vocabulary base fallback (Tự động nạp mẫu - 311 từ trong file Excel sẽ tải động hoặc nhúng)
-    let VOCAB_DATABASE = [
-      { lesson: 1, cn: "接", pinyin: "jiē", vi: "nghe (điện thoại); đón", exCn: "我在接电话。", exVi: "Tôi đang nghe điện thoại." },
-      { lesson: 1, cn: "开会", pinyin: "kāihuì", vi: "họp", exCn: "我们九点开会。", exVi: "Chín giờ chúng tôi họp." },
-      { lesson: 1, cn: "亲戚", pinyin: "qīnqi", vi: "họ hàng", exCn: "他去看亲戚。", exVi: "Anh ấy đi thăm họ hàng." },
-      { lesson: 2, cn: "准备", pinyin: "zhǔnbèi", vi: "chuẩn bị", exCn: "我们准备好了。", exVi: "Chúng tôi chuẩn bị xong rồi." },
-      { lesson: 2, cn: "考试", pinyin: "kǎoshì", vi: "thi, kiểm tra", exCn: "明天有考试。", exVi: "Ngày mai có bài thi." }
-    ];
-
-    // Tự động load dữ liệu full từ server nếu có file vocab.json hoặc dùng mảng mặc định
-    fetch('vocab.json').then(r => r.json()).then(d => { if(d && d.length) VOCAB_DATABASE = d; }).catch(()=>{});
-
-    // ==========================================
-    // 2. STATE QUẢN LÝ
-    // ==========================================
-    let currentSlide = 1;
-    let selectedMode = 'vocab'; // 'vocab', 'arrange', 'typing', 'mixed'
-    let selectedScope = 'all';  // 'single', 'multi', 'all'
+    // Trạng thái ứng dụng
+    let selectedMode = 'vocab';
+    let selectedScope = 'all';
     let selectedLessons = [1];
-
     let sessionQuestions = [];
     let currentIndex = 0;
-    let wrongQuestions = [];
-    let reviewedCount = 0;
     let selectedArrangeWords = [];
 
-    // ==========================================
-    // 3. SLIDE & NAVIGATION MANAGEMENT
-    // ==========================================
+    // Chuyển đổi Slide
     function goToSlide(slideNum) {
-      currentSlide = slideNum;
       document.getElementById('slide1').classList.add('hidden');
       document.getElementById('slide2').classList.add('hidden');
       document.getElementById('slide3').classList.add('hidden');
@@ -506,38 +366,16 @@
       document.getElementById(`slide${slideNum}`).classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      if (slideNum === 1) {
-        initSlide1();
-      } else if (slideNum === 3) {
-        initSlide3();
-      }
+      if (slideNum === 1) initSlide1();
+      else if (slideNum === 3) initSlide3();
     }
 
     function initSlide1() {
-      // Random Welcome Quote
-      const randomQuote = WELCOME_QUOTES[Math.floor(Math.random() * WELCOME_QUOTES.length)];
-      document.getElementById('slide1GreetingCn').textContent = randomQuote.cn;
-      document.getElementById('slide1GreetingVi').textContent = randomQuote.vi;
-
-      // Check Saved Session
-      const saved = localStorage.getItem('ms_qa_hantalk_session');
-      const resumeCard = document.getElementById('slide1ResumeCard');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          document.getElementById('slide1ResumeText').textContent = `Bạn đang dừng ở: ${data.scopeText || 'Bài học'} · Câu ${data.currentIndex + 1}`;
-          resumeCard.classList.remove('hidden');
-        } catch(e) {
-          resumeCard.classList.add('hidden');
-        }
-      } else {
-        resumeCard.classList.add('hidden');
-      }
+      const q = WELCOME_QUOTES[Math.floor(Math.random() * WELCOME_QUOTES.length)];
+      document.getElementById('slide1GreetingCn').textContent = q.cn;
+      document.getElementById('slide1GreetingVi').textContent = q.vi;
     }
 
-    // ==========================================
-    // 4. SLIDE 2 CONTROLS & SCOPE SELECTOR
-    // ==========================================
     function selectMode(mode) {
       selectedMode = mode;
       ['Vocab', 'Arrange', 'Typing', 'Mixed'].forEach(m => {
@@ -609,7 +447,6 @@
       innerGrid.innerHTML = '';
       for (let i = 1; i <= 30; i++) {
         const btn = document.createElement('button');
-        btn.id = `mBtn_${i}`;
         const isSel = selectedLessons.includes(i);
         btn.className = `p-2 rounded-xl text-xs font-bold border ${isSel ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-slate-700 border-slate-200'}`;
         btn.textContent = `${i}`;
@@ -628,403 +465,239 @@
     function confirmMultiLessons() {
       if (selectedLessons.length === 0) selectedLessons = [1];
       selectedLessons.sort((a,b) => a - b);
-      document.getElementById('scopeMultiText').textContent = `Đã chọn: ${selectedLessons.length} bài`;
+      document.getElementById('scopeMultiText').textContent = `Đã chọn: ${selectedLessons.join(', ')}`;
       document.getElementById('lessonPickerContainer').classList.add('hidden');
     }
 
-    // ==========================================
-    // 5. PRACTICE ENGINE & FLOW
-    // ==========================================
     function startSession() {
-      // 1. Filter Data
-      let pool = [];
+      let filtered = [];
       if (selectedScope === 'all') {
-        pool = [...VOCAB_DATABASE];
+        filtered = [...VOCAB_DATABASE];
       } else {
-        pool = VOCAB_DATABASE.filter(item => selectedLessons.includes(item.lesson));
+        filtered = VOCAB_DATABASE.filter(item => selectedLessons.includes(item.lesson));
       }
 
-      if (pool.length === 0) pool = [...VOCAB_DATABASE];
+      if (filtered.length === 0) {
+        alert("Không tìm thấy từ vựng cho bài đã chọn!");
+        return;
+      }
 
-      // Shuffle pool
-      pool.sort(() => Math.random() - 0.5);
-
-      // Build session questions
-      sessionQuestions = pool.map(item => {
-        let type = selectedMode;
-        if (selectedMode === 'mixed') {
-          const types = ['vocab', 'arrange', 'typing'];
-          type = types[Math.floor(Math.random() * types.length)];
-        }
-        return { ...item, questionType: type };
-      });
-
+      sessionQuestions = filtered.sort(() => 0.5 - Math.random());
       currentIndex = 0;
-      wrongQuestions = [];
-      reviewedCount = 0;
 
-      document.getElementById('slide2ControlPanel').classList.add('hidden');
-      document.getElementById('slide2PracticeArea').classList.remove('hidden');
-      document.getElementById('pausePanel').classList.add('hidden');
-      document.getElementById('summaryPanel').classList.add('hidden');
       document.getElementById('continuationMenu').classList.add('hidden');
+      document.getElementById('mainExerciseCard').classList.remove('hidden');
 
+      goToSlide(2);
       renderCurrentQuestion();
     }
 
     function renderCurrentQuestion() {
       if (currentIndex >= sessionQuestions.length) {
-        showBatchCompletion();
+        document.getElementById('mainExerciseCard').classList.add('hidden');
+        document.getElementById('continuationMenu').classList.remove('hidden');
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         return;
       }
 
       const q = sessionQuestions[currentIndex];
-      
-      // Update header info
+      const progress = Math.round(((currentIndex) / sessionQuestions.length) * 100);
+      document.getElementById('practiceProgressBar').style.width = `${progress}%`;
+      document.getElementById('currentProgressCounter').textContent = `Đã ôn: ${currentIndex}/${sessionQuestions.length} từ`;
+
       document.getElementById('cardBadge').textContent = `第 ${q.lesson} 课 / Bài ${q.lesson}`;
-      
-      // Update Progress
-      reviewedCount = currentIndex;
-      document.getElementById('currentProgressCounter').textContent = `Đã ôn: ${reviewedCount} từ`;
-      const pct = Math.round((currentIndex / sessionQuestions.length) * 100);
-      document.getElementById('practiceProgressBar').style.width = `${pct}%`;
+      document.getElementById('cardChinese').textContent = q.cn;
+      document.getElementById('cardPinyin').textContent = q.pinyin;
+      document.getElementById('cardVietnameseHint').textContent = q.vi;
 
-      // Hide Feedback
-      const fb = document.getElementById('feedbackBox');
-      fb.classList.add('hidden');
-      document.getElementById('btnCheckAnswer').classList.remove('hidden');
+      document.getElementById('feedbackBox').classList.add('hidden');
+      document.getElementById('checkBtnContainer').classList.add('hidden');
 
-      const interactive = document.getElementById('interactiveContent');
-      interactive.innerHTML = '';
+      let currentModeToPlay = selectedMode;
+      if (selectedMode === 'mixed') {
+        const modes = ['vocab', 'arrange', 'typing'];
+        currentModeToPlay = modes[Math.floor(Math.random() * modes.length)];
+      }
+
+      const container = document.getElementById('interactiveContent');
+      container.innerHTML = '';
+
+      if (currentModeToPlay === 'vocab') {
+        document.getElementById('currentModeTitle').textContent = '📖 词汇复习 / Ôn từ vựng';
+        renderVocabMode(q, container);
+      } else if (currentModeToPlay === 'arrange') {
+        document.getElementById('currentModeTitle').textContent = '🧩 连词成句 / Sắp xếp câu';
+        renderArrangeMode(q, container);
+      } else if (currentModeToPlay === 'typing') {
+        document.getElementById('currentModeTitle').textContent = '⌨️ 打字练习 / Luyện gõ';
+        renderTypingMode(q, container);
+      }
+    }
+
+    function renderVocabMode(q, container) {
+      let options = [q.vi];
+      const otherVis = VOCAB_DATABASE.filter(x => x.vi !== q.vi).map(x => x.vi);
+      const shuffledOthers = otherVis.sort(() => 0.5 - Math.random()).slice(0, 3);
+      options = options.concat(shuffledOthers).sort(() => 0.5 - Math.random());
+
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'p-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-teal-50 hover:border-teal-300 text-slate-700 font-bold text-sm transition-all shadow-sm text-left';
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === q.vi) {
+            showFeedback(true, "正确！/ Chính xác!", `${q.cn} (${q.pinyin}): ${q.vi}`);
+          } else {
+            showFeedback(false, "再试一次！/ Thử lại nhé!", `Đáp án đúng là: ${q.vi}`);
+          }
+        };
+        grid.appendChild(btn);
+      });
+      container.appendChild(grid);
+    }
+
+    function renderArrangeMode(q, container) {
+      const targetSentence = q.exCn ? q.exCn.split('\n')[0] : q.cn;
+      const cleanSentence = targetSentence.replace(/[。，！？]/g, '');
+      const words = cleanSentence.split('').sort(() => 0.5 - Math.random());
+
       selectedArrangeWords = [];
 
-      if (q.questionType === 'vocab') {
-        document.getElementById('currentModeTitle').textContent = "📖 词汇复习 / Ôn từ vựng";
-        document.getElementById('cardChinese').textContent = q.cn;
-        document.getElementById('cardPinyin').textContent = q.pinyin;
-        document.getElementById('cardVietnamese').textContent = q.vi;
-        document.getElementById('cardPinyinArea').classList.remove('hidden');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'space-y-4';
 
-        // Flashcard Reveal Button
-        interactive.innerHTML = `
-          <div class="text-center py-4">
-            <button onclick="revealVocabAnswer()" class="px-6 py-3 rounded-2xl bg-teal-50 text-teal-800 border border-teal-200 font-bold text-xs hover:bg-teal-100 transition-colors">
-              👁️ 显示例句 / Hiện ví dụ & nghĩa
-            </button>
-            <div id="vocabExampleArea" class="hidden mt-4 space-y-1 text-sm bg-white/60 p-4 rounded-2xl border border-teal-100">
-              <p class="font-bold text-slate-800">${q.exCn || q.cn}</p>
-              <p class="text-teal-600 text-xs">${q.exVi || q.vi}</p>
-            </div>
-          </div>
-        `;
-      } else if (q.questionType === 'arrange') {
-        document.getElementById('currentModeTitle').textContent = "🧩 连词成句 / Sắp xếp câu";
-        document.getElementById('cardChinese').textContent = q.exVi || q.vi;
-        document.getElementById('cardPinyinArea').classList.add('hidden');
-        document.getElementById('cardVietnamese').textContent = "Hãy sắp xếp các từ sau thành câu đúng:";
+      const dropZone = document.createElement('div');
+      dropZone.id = 'dropZone';
+      dropZone.className = 'min-h-[50px] p-3 rounded-2xl bg-slate-100 border-2 border-dashed border-slate-300 flex flex-wrap gap-2 items-center';
 
-        const targetSentence = q.exCn || q.cn;
-        // Split sentence into words/characters
-        let parts = targetSentence.replace(/[。！？，]/g, '').split('');
-        if (targetSentence.length > 8) {
-          // split into pairs
-          parts = targetSentence.match(/.{1,2}/g) || parts;
-        }
-        parts.sort(() => Math.random() - 0.5);
+      const wordPool = document.createElement('div');
+      wordPool.id = 'wordPool';
+      wordPool.className = 'flex flex-wrap gap-2 justify-center pt-2';
 
-        interactive.innerHTML = `
-          <div class="space-y-4 w-full">
-            <div id="arrangeAnswerBox" class="min-h-[50px] p-3 rounded-2xl bg-slate-100/80 border-2 border-dashed border-teal-300 flex flex-wrap gap-2 items-center justify-center">
-              <span class="text-slate-400 text-xs italic">Chạm vào các từ bên dưới để xếp...</span>
-            </div>
-            <div id="arrangeOptionsBox" class="flex flex-wrap gap-2 justify-center pt-2">
-              ${parts.map((p, idx) => `
-                <button id="wordBtn_${idx}" onclick="pickArrangeWord('${p}',${idx})" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-sm font-bold text-slate-800 hover:border-teal-500 active:scale-95 transition-all">
-                  ${p}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      } else if (q.questionType === 'typing') {
-        document.getElementById('currentModeTitle').textContent = "✍️ 打字练习 / Luyện gõ";
-        document.getElementById('cardChinese').textContent = q.vi;
-        document.getElementById('cardPinyinArea').classList.add('hidden');
-        document.getElementById('cardVietnamese').textContent = "请写出中文 / Hãy nhập chữ Hán tương ứng:";
+      words.forEach((char, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base shadow-sm hover:scale-105 transition-all';
+        btn.textContent = char;
+        btn.dataset.index = idx;
 
-        interactive.innerHTML = `
-          <div class="space-y-3 w-full max-w-md mx-auto">
-            <input type="text" id="typingInput" placeholder="Nhập tiếng Trung tại đây..." class="w-full px-4 py-3 rounded-2xl border-2 border-teal-200 focus:border-teal-600 focus:outline-none text-center font-bold text-lg text-slate-800 bg-white shadow-inner">
-            <p class="text-[11px] text-slate-400 text-center">Gợi ý pinyin: ${q.pinyin}</p>
-          </div>
-        `;
-        setTimeout(() => {
-          const inp = document.getElementById('typingInput');
-          if(inp) inp.focus();
-        }, 100);
-      }
+        btn.onclick = () => {
+          if (btn.parentElement === wordPool) {
+            dropZone.appendChild(btn);
+            selectedArrangeWords.push(char);
+          } else {
+            wordPool.appendChild(btn);
+            selectedArrangeWords = selectedArrangeWords.filter((_, i) => i !== selectedArrangeWords.indexOf(char));
+          }
+        };
+        wordPool.appendChild(btn);
+      });
 
-      // Auto save progress silently
-      autoSaveSession();
+      wrapper.appendChild(dropZone);
+      wrapper.appendChild(wordPool);
+      container.appendChild(wrapper);
+
+      document.getElementById('checkBtnContainer').classList.remove('hidden');
+      window.currentAnswerTarget = cleanSentence;
+      window.currentCheckType = 'arrange';
     }
 
-    function revealVocabAnswer() {
-      const ex = document.getElementById('vocabExampleArea');
-      if(ex) ex.classList.remove('hidden');
-    }
+    function renderTypingMode(q, container) {
+      const targetText = q.cn;
 
-    function pickArrangeWord(word, idx) {
-      const btn = document.getElementById(`wordBtn_${idx}`);
-      if (btn.disabled) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'space-y-3 max-w-md mx-auto';
 
-      btn.disabled = true;
-      btn.classList.add('opacity-30');
-      selectedArrangeWords.push({ word, idx });
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.id = 'typingInput';
+      input.placeholder = 'Nhập Pinyin hoặc chữ Hán vào đây...';
+      input.className = 'w-full px-4 py-3 rounded-2xl border-2 border-teal-200 focus:border-teal-500 focus:outline-none text-center text-lg font-bold bg-white shadow-sm';
 
-      renderArrangeAnswer();
-    }
+      wrapper.appendChild(input);
+      container.appendChild(wrapper);
 
-    function renderArrangeAnswer() {
-      const box = document.getElementById('arrangeAnswerBox');
-      if (selectedArrangeWords.length === 0) {
-        box.innerHTML = `<span class="text-slate-400 text-xs italic">Chạm vào các từ bên dưới để xếp...</span>`;
-        return;
-      }
-      box.innerHTML = selectedArrangeWords.map((item, i) => `
-        <button onclick="removeArrangeWord(${i})" class="px-3.5 py-1.5 rounded-xl bg-teal-600 text-white font-bold text-sm shadow-sm flex items-center space-x-1">
-          <span>${item.word}</span>
-          <i class="fa-solid fa-xmark text-[10px] opacity-70"></i>
-        </button>
-      `).join('');
-    }
-
-    function removeArrangeWord(index) {
-      const item = selectedArrangeWords[index];
-      const btn = document.getElementById(`wordBtn_${item.idx}`);
-      if (btn) {
-        btn.disabled = false;
-        btn.classList.remove('opacity-30');
-      }
-      selectedArrangeWords.splice(index, 1);
-      renderArrangeAnswer();
-    }
-
-    // Normalizing function ignoring punctuation and outer spaces
-    function normalizeChinese(str) {
-      if (!str) return '';
-      return str.replace(/[ \t\r\n。！？，、；：""''（）]/g, '').toLowerCase();
+      document.getElementById('checkBtnContainer').classList.remove('hidden');
+      window.currentAnswerTarget = targetText;
+      window.currentCheckType = 'typing';
     }
 
     function checkCurrentAnswer() {
       const q = sessionQuestions[currentIndex];
-      let isCorrect = false;
-
-      if (q.questionType === 'vocab') {
-        isCorrect = true; // Flashcard standard review count
-      } else if (q.questionType === 'arrange') {
-        const userStr = selectedArrangeWords.map(x => x.word).join('');
-        const targetStr = q.exCn || q.cn;
-        isCorrect = (normalizeChinese(userStr) === normalizeChinese(targetStr));
-      } else if (q.questionType === 'typing') {
-        const inp = document.getElementById('typingInput');
-        const userVal = inp ? inp.value : '';
-        isCorrect = (normalizeChinese(userVal) === normalizeChinese(q.cn));
+      if (window.currentCheckType === 'arrange') {
+        const userStr = selectedArrangeWords.join('');
+        if (userStr === window.currentAnswerTarget) {
+          showFeedback(true, "太棒了！/ Xuất sắc!", `${q.exCn || q.cn}`);
+        } else {
+          showFeedback(false, "加油！/ Cố lên nào!", `Đáp án đúng: ${window.currentAnswerTarget}`);
+        }
+      } else if (window.currentCheckType === 'typing') {
+        const val = document.getElementById('typingInput').value.trim();
+        if (val === window.currentAnswerTarget || val.toLowerCase() === q.pinyin.toLowerCase()) {
+          showFeedback(true, "正确！/ Chính xác!", `${q.cn} - ${q.pinyin}`);
+        } else {
+          showFeedback(false, "再试一次！/ Hãy thử lại!", `Đáp án đúng: ${q.cn} (${q.pinyin})`);
+        }
       }
+    }
 
-      const fb = document.getElementById('feedbackBox');
-      const fbCn = document.getElementById('feedbackTextCn');
-      const fbVi = document.getElementById('feedbackTextVi');
-
-      fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+    function showFeedback(isCorrect, textCn, textVi) {
+      const box = document.getElementById('feedbackBox');
+      box.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
 
       if (isCorrect) {
-        fb.classList.add('bg-emerald-100', 'text-emerald-800');
-        fbCn.textContent = "✓ 正确！";
-        fbVi.textContent = "Chính xác!";
+        box.classList.add('bg-emerald-100', 'text-emerald-800');
+        confetti({ particleCount: 30, spread: 60, origin: { y: 0.7 } });
       } else {
-        fb.classList.add('bg-rose-100', 'text-rose-800');
-        fbCn.textContent = "再试一次！ / Đáp án đúng là: " + (q.exCn || q.cn);
-        fbVi.textContent = "Thử lại hoặc ghi nhớ câu này nhé!";
-        wrongQuestions.push(q);
+        box.classList.add('bg-rose-100', 'text-rose-800');
       }
 
-      document.getElementById('btnCheckAnswer').classList.add('hidden');
+      document.getElementById('feedbackTextCn').textContent = textCn;
+      document.getElementById('feedbackTextVi').textContent = textVi;
 
       setTimeout(() => {
         currentIndex++;
         renderCurrentQuestion();
-      }, 1200);
+      }, 1800);
     }
 
     function speakCurrentText() {
-      const q = sessionQuestions[currentIndex];
-      if (!q) return;
-      const text = q.cn || q.exCn;
+      const text = document.getElementById('cardChinese').textContent;
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'zh-CN';
-        window.speechSynthesis.speak(u);
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'zh-CN';
+        window.speechSynthesis.speak(msg);
       }
     }
 
-    // ==========================================
-    // 6. CONTINUATION, PAUSE & FINISH FLOW
-    // ==========================================
-    function showBatchCompletion() {
-      document.getElementById('interactiveContent').innerHTML = '';
-      document.getElementById('cardChinese').textContent = "🎉";
-      document.getElementById('cardPinyinArea').classList.add('hidden');
-      document.getElementById('cardVietnamese').textContent = "Bạn đã hoàn thành phần luyện tập hiện tại!";
-      document.getElementById('btnCheckAnswer').classList.add('hidden');
-      
-      document.getElementById('continuationMenu').classList.remove('hidden');
-      localStorage.removeItem('ms_qa_hantalk_session');
-    }
-
-    function continueNextMode(newMode) {
-      selectedMode = newMode;
-      startSession();
-    }
-
-    function backToSelection() {
-      document.getElementById('slide2ControlPanel').classList.remove('hidden');
-      document.getElementById('slide2PracticeArea').classList.add('hidden');
-    }
-
-    function pauseSession() {
-      autoSaveSession();
-      document.getElementById('pausePanel').classList.remove('hidden');
-    }
-
-    function resumeSession() {
-      document.getElementById('pausePanel').classList.add('hidden');
-    }
-
-    function autoSaveSession() {
-      const scopeText = selectedScope === 'all' ? 'Tất cả 30 bài' : `Bài ${selectedLessons.join(',')}`;
-      const saveData = {
-        scopeText,
-        selectedMode,
-        selectedScope,
-        selectedLessons,
-        currentIndex,
-        sessionQuestions,
-        reviewedCount: currentIndex
-      };
-      localStorage.setItem('ms_qa_hantalk_session', JSON.stringify(saveData));
-    }
-
-    function resumeSavedSession() {
-      const saved = localStorage.getItem('ms_qa_hantalk_session');
-      if (!saved) return;
-      try {
-        const data = JSON.parse(saved);
-        selectedMode = data.selectedMode;
-        selectedScope = data.selectedScope;
-        selectedLessons = data.selectedLessons;
-        sessionQuestions = data.sessionQuestions;
-        currentIndex = data.currentIndex;
-
-        goToSlide(2);
-        document.getElementById('slide2ControlPanel').classList.add('hidden');
-        document.getElementById('slide2PracticeArea').classList.remove('hidden');
-        renderCurrentQuestion();
-      } catch(e) {
-        goToSlide(2);
-      }
-    }
-
-    function finishSession() {
-      document.getElementById('pausePanel').classList.add('hidden');
-      document.getElementById('continuationMenu').classList.add('hidden');
-      document.getElementById('summaryPanel').classList.remove('hidden');
-
-      const totalCount = currentIndex;
-      document.getElementById('summaryTextCn').textContent = `今天复习了${totalCount}个词。`;
-      document.getElementById('summaryTextVi').textContent = `Hôm nay bạn đã ôn ${totalCount} từ.`;
-
-      const btnRetry = document.getElementById('btnRetryWrong');
-      if (wrongQuestions.length > 0) {
-        document.getElementById('summaryWrongCountCn').textContent = `有${wrongQuestions.length}道题可以再看一遍。 / Có ${wrongQuestions.length} câu bạn có thể xem lại.`;
-        btnRetry.classList.remove('hidden');
-      } else {
-        document.getElementById('summaryWrongCountCn').textContent = '';
-        btnRetry.classList.add('hidden');
-      }
-
-      localStorage.removeItem('ms_qa_hantalk_session');
-    }
-
-    function retryWrongQuestions() {
-      sessionQuestions = [...wrongQuestions];
-      wrongQuestions = [];
+    function continueNextMode(mode) {
+      selectedMode = mode;
       currentIndex = 0;
-      document.getElementById('summaryPanel').classList.add('hidden');
+      document.getElementById('continuationMenu').classList.add('hidden');
+      document.getElementById('mainExerciseCard').classList.remove('hidden');
       renderCurrentQuestion();
     }
 
-    // ==========================================
-    // 7. SLIDE 3: TÚI MÙ / HỘP QUÀ
-    // ==========================================
     function initSlide3() {
       document.getElementById('giftGrid').classList.remove('hidden');
       document.getElementById('revealedQuoteArea').classList.add('hidden');
-
-      for (let i = 0; i < 3; i++) {
-        const lid = document.getElementById(`boxLid${i}`);
-        if(lid) {
-          lid.classList.remove('gift-shake');
-          lid.textContent = '🎁';
-        }
-      }
     }
 
-    function openGiftBox(boxIdx) {
-      const lid = document.getElementById(`boxLid${boxIdx}`);
-      if(lid) lid.classList.add('gift-shake');
+    function openGiftBox(idx) {
+      document.getElementById('giftGrid').classList.add('hidden');
+      const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
 
-      // Unique non-repeating quote manager via localStorage
-      let usedIndices = [];
-      try {
-        usedIndices = JSON.parse(localStorage.getItem('ms_qa_used_quotes') || '[]');
-      } catch(e) { usedIndices = []; }
+      document.getElementById('quoteChinese').textContent = quote.cn;
+      document.getElementById('quoteVietnamese').textContent = quote.vi;
 
-      if (usedIndices.length >= MOTIVATIONAL_QUOTES.length) {
-        usedIndices = [];
-      }
-
-      let available = [];
-      for (let i = 0; i < MOTIVATIONAL_QUOTES.length; i++) {
-        if (!usedIndices.includes(i)) available.push(i);
-      }
-
-      const selectedIdx = available[Math.floor(Math.random() * available.length)];
-      usedIndices.push(selectedIdx);
-      localStorage.setItem('ms_qa_used_quotes', JSON.stringify(usedIndices));
-
-      const quote = MOTIVATIONAL_QUOTES[selectedIdx];
-
-      setTimeout(() => {
-        // Trigger Confetti
-        if (typeof confetti === 'function') {
-          confetti({
-            particleCount: 70,
-            spread: 60,
-            origin: { y: 0.6 }
-          });
-        }
-
-        document.getElementById('giftGrid').classList.add('hidden');
-        document.getElementById('quoteChinese').textContent = quote.cn;
-        document.getElementById('quoteVietnamese').textContent = quote.vi;
-        document.getElementById('revealedQuoteArea').classList.remove('hidden');
-      }, 600);
+      document.getElementById('revealedQuoteArea').classList.remove('hidden');
+      confetti({ particleCount: 80, spread: 80, origin: { y: 0.5 } });
     }
 
-    // On Load Startup
-    window.addEventListener('DOMContentLoaded', () => {
-      initSlide1();
-    });
+    // Khởi tạo ban đầu
+    initSlide1();
   </script>  
 </body>  
 </html>
