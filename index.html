@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 2_Ms QA.Hantalk</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #EBF8F6; /* Mint pastel background */
+            color: #1E293B;
+            min-height: 100vh;
+        }
+
+        .bg-mint { background-color: #EBF8F6; }
+        .text-teal-main { color: #0D9488; }
+        .bg-teal-main { background-color: #0D9488; }
+        .bg-teal-light { background-color: #CCFBF1; }
+        .border-teal-main { border-color: #0D9488; }
+
+        .shadow-soft {
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Slide Transition SPA */
+        .slide-screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .slide-screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(0.5deg); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(8deg); }
+            60% { transform: rotate(-5deg); }
+            80% { transform: rotate(5deg); }
+        }
+        .animate-shake { animation: shake 0.5s ease-in-out; }
+
+        .box-hover {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .box-hover:hover {
+            transform: translateY(-8px) scale(1.03);
+        }
+    </style>
+</head>
+<body class="bg-mint flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="w-full bg-white/90 backdrop-blur-md border-b border-teal-100 sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="goToSlide(1)">
+                <span class="text-2xl">📚</span>
+                <span class="font-extrabold text-lg sm:text-xl text-teal-800 tracking-tight">Level 2_Ms QA.Hantalk</span>
+            </div>
+            <div id="header-stats" class="flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 bg-teal-50 px-3 py-1.5 rounded-full border border-teal-100">
+                <i class="fa-solid fa-fire text-amber-500"></i>
+                <span>Ôn tập HSK 2</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+        <!-- ==========================================
+             SLIDE 1: TRANG CHÀO MỪNG
+             ========================================== -->
+        <section id="slide-1" class="slide-screen active">
+            <div class="max-w-xl mx-auto text-center space-y-6 my-auto py-4">
+                
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-soft border border-teal-100/80 relative overflow-hidden space-y-6">
+                    <div class="absolute -top-12 -right-12 w-36 h-36 bg-teal-50 rounded-full blur-2xl -z-0"></div>
+
+                    <div class="relative z-10 space-y-6">
+                        <!-- Thẻ câu chào cố định chính -->
+                        <div class="p-4 sm:p-5 rounded-2xl bg-teal-50/90 border border-teal-100/90 text-left sm:text-center">
+                            <p class="text-lg sm:text-xl font-extrabold text-teal-900 leading-snug">
+                                🌱 欢迎回来！有时间的时候，回来看看吧。
+                            </p>
+                            <p class="text-xs sm:text-sm font-medium text-teal-700 mt-1">
+                                Chào mừng bạn quay lại! Khi có thời gian, hãy ghé qua ôn một chút nhé.
+                            </p>
+                        </div>
+
+                        <!-- Câu ngẫu nhiên trong 15 câu chào -->
+                        <div class="px-3 py-2 text-slate-600 text-xs sm:text-sm italic" id="random-greeting-text">
+                            👋 欢迎回来！今天也要进步一点点哦～<br>
+                            <span class="not-italic text-slate-500 text-xs">Chào mừng bạn quay lại! Hôm nay cũng tiến bộ một chút nhé～</span>
+                        </div>
+
+                        <!-- Câu Mỗi ngày tiến bộ một chút nổi bật -->
+                        <div class="p-4 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-md shadow-teal-500/20">
+                            <p class="text-xl sm:text-2xl font-black tracking-wide">
+                                ✨ 每天进步一点点
+                            </p>
+                            <p class="text-xs sm:text-sm font-medium text-teal-100 mt-0.5">
+                                Mỗi ngày tiến bộ một chút
+                            </p>
+                        </div>
+
+                        <!-- Banner tiếp tục tiến độ nếu có trong localStorage -->
+                        <div id="resume-banner" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left flex items-center justify-between gap-3">
+                            <div>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded">🌱 Tiến độ chưa xong</span>
+                                <p class="text-xs sm:text-sm font-bold text-slate-700 mt-1" id="resume-text">Đang dừng ở: Bài 1 · Câu 1</p>
+                            </div>
+                            <button onclick="resumeSavedSession()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+                                <i class="fa-solid fa-play"></i> Tiếp tục
+                            </button>
+                        </div>
+
+                        <!-- Nút Bắt đầu ôn tập -->
+                        <div class="pt-2">
+                            <button onclick="startNewSession()" class="w-full sm:w-auto px-8 py-4 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-teal-600/30 transition-all duration-200 flex items-center justify-center gap-3 mx-auto">
+                                <i class="fa-solid fa-play text-xl"></i>
+                                <span>▶️ 开始复习 · Bắt đầu ôn tập</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             SLIDE 2: TRANG HỌC TẬP
+             ========================================== -->
+        <section id="slide-2" class="slide-screen">
+            <div class="space-y-5">
+
+                <!-- PANEL ĐIỀU KHIỂN: CHẾ ĐỘ & PHẠM VI BÀI HỌC -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-soft border border-teal-100 space-y-4">
+                    
+                    <!-- 1. CHỌN CHẾ ĐỘ LUYỆN TẬP -->
+                    <div>
+                        <label class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2 block">
+                            🎯 Chế độ luyện tập
+                        </label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <button onclick="setMode('vocab')" id="mode-btn-vocab" class="mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-700 font-bold hover:border-teal-300 transition">
+                                <span class="text-lg mb-0.5">📖</span>
+                                <span class="text-xs">Ôn từ vựng</span>
+                            </button>
+
+                            <button onclick="setMode('arrange')" id="mode-btn-arrange" class="mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-700 font-bold hover:border-teal-300 transition">
+                                <span class="text-lg mb-0.5">🧩</span>
+                                <span class="text-xs">Sắp xếp câu</span>
+                            </button>
+
+                            <button onclick="setMode('typing')" id="mode-btn-typing" class="mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-700 font-bold hover:border-teal-300 transition">
+                                <span class="text-lg mb-0.5">⌨️</span>
+                                <span class="text-xs">Luyện gõ</span>
+                            </button>
+
+                            <button onclick="setMode('mixed')" id="mode-btn-mixed" class="mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-700 font-bold hover:border-teal-300 transition">
+                                <span class="text-lg mb-0.5">🔀</span>
+                                <span class="text-xs">Luyện tổng hợp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. CHỌN PHẠM VI BÀI HỌC -->
+                    <div class="pt-3 border-t border-slate-100">
+                        <label class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2 block">
+                            📚 Chọn phạm vi bài học
+                        </label>
+
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <button onclick="setScopeType('single')" id="scope-type-single" class="scope-type-btn py-2 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                📖 Theo bài
+                            </button>
+                            <button onclick="setScopeType('range')" id="scope-type-range" class="scope-type-btn py-2 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                📚 Nhiều bài
+                            </button>
+                            <button onclick="setScopeType('all')" id="scope-type-all" class="scope-type-btn py-2 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                🌏 Ôn tất cả
+                            </button>
+                        </div>
+
+                        <!-- Cấu hình chi tiết phạm vi -->
+                        <div id="scope-sub-controls" class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                            <div id="scope-ctrl-single" class="scope-ctrl flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-600">Chọn bài:</span>
+                                <select id="single-lesson-select" onchange="onScopeConfigChange()" class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+
+                            <div id="scope-ctrl-range" class="scope-ctrl hidden flex items-center gap-2 flex-wrap">
+                                <span class="text-xs font-bold text-slate-600">Từ bài:</span>
+                                <select id="range-start-select" onchange="onScopeConfigChange()" class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-2.5 py-1">
+                                </select>
+                                <span class="text-xs font-bold text-slate-600">Đến bài:</span>
+                                <select id="range-end-select" onchange="onScopeConfigChange()" class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-2.5 py-1">
+                                </select>
+                            </div>
+
+                            <div id="scope-ctrl-all" class="scope-ctrl hidden text-xs font-bold text-teal-700 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span>Ôn tập toàn bộ 30 bài (311 từ/câu). Tiến độ tự động lưu!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 3. KHU VỰC THỰC HÀNH CÂU HỎI -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-soft border border-teal-100 min-h-[360px] flex flex-col justify-between relative" id="practice-card">
+                    
+                    <!-- Header Câu Hỏi -->
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span id="current-badge-lesson" class="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-100">
+                                Bài 1 · 第1课
+                            </span>
+                            <span id="current-badge-mode" class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                📖 Ôn từ vựng
+                            </span>
+                        </div>
+                        <div class="text-xs font-bold text-slate-400">
+                            Câu <span id="current-item-index" class="text-teal-600">1</span> / <span id="total-item-count">10</span>
+                        </div>
+                    </div>
+
+                    <!-- Nội dung câu hỏi Dynamic -->
+                    <div id="question-body" class="flex-1 flex flex-col justify-center my-2">
+                        <!-- Dynamic content -->
+                    </div>
+
+                    <!-- Footer & Nút Tạm Dừng -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                        <button onclick="pauseSession()" class="px-3.5 py-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl font-bold text-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-pause"></i> ⏸️ Tạm dừng
+                        </button>
+
+                        <button onclick="skipQuestion()" class="px-3.5 py-2 text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+                            Bỏ qua <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- BANNER HOÀN THÀNH PHẦN HỌC -->
+                <div id="completion-card" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-soft border-2 border-teal-500 text-center space-y-5 animate-float">
+                    <div class="w-16 h-16 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center text-3xl mx-auto">
+                        🎉
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+                            🎉 已完成本部分！
+                        </h3>
+                        <p class="text-xs sm:text-sm text-teal-700 font-bold mt-1">
+                            Đã hoàn thành phần học này! Tiếp theo bạn muốn làm gì?
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-lg mx-auto pt-2">
+                        <button onclick="nextLearningPart('arrange')" class="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                            <span>🧩 Sắp xếp câu · Phần tiếp</span>
+                        </button>
+
+                        <button onclick="nextLearningPart('typing')" class="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-keyboard"></i>
+                            <span>⌨️ Luyện gõ</span>
+                        </button>
+
+                        <button onclick="nextLearningPart('mixed')" class="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shuffle"></i>
+                            <span>🔀 Luyện tập tổng hợp</span>
+                        </button>
+
+                        <button onclick="showChangeLessonInPage()" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-2xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book"></i>
+                            <span>📖 Đổi bài học</span>
+                        </button>
+
+                        <button onclick="pauseSession()" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-2xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pause"></i>
+                            <span>⏸️ Tạm dừng</span>
+                        </button>
+
+                        <button onclick="finishSessionToBlindBox()" class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm rounded-2xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-moon"></i>
+                            <span>🌙 结束本次复习 · Kết thúc</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             MODAL OVERLAY TẠM DỪNG
+             ========================================== -->
+        <div id="pause-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-teal-100 text-center space-y-6">
+                <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center text-3xl mx-auto">
+                    ⏸️
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800">⏸️ 已暂停学习</h2>
+                    <p class="text-sm font-semibold text-slate-500 mt-1">Đã tạm dừng phiên học</p>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="resumeSessionModal()" class="w-full py-3.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i>
+                        <span>▶️ 继续复习 · Tiếp tục ôn tập</span>
+                    </button>
+
+                    <button onclick="finishSessionToBlindBox()" class="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-moon"></i>
+                        <span>🌙 结束本次复习 · Tạm dừng & Kết thúc</span>
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-400 font-medium">
+                    Quay lại sau cũng được, tiến độ sẽ được lưu tự động! 🌱
+                </p>
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             SLIDE 3: TRANG KẾT THÚC + TÚI MÙ (BLIND BOX)
+             ========================================== -->
+        <section id="slide-3" class="slide-screen">
+            <div class="max-w-xl mx-auto text-center space-y-6 py-6 my-auto">
+
+                <div class="space-y-2">
+                    <span class="px-4 py-1.5 rounded-full bg-teal-50 text-teal-700 font-bold text-xs uppercase tracking-wider border border-teal-100">
+                        🎁 Phần thưởng ôn tập
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-800 leading-snug">
+                        🎁 今天，选一句话送给自己吧。
+                    </h2>
+                    <p class="text-sm font-semibold text-slate-500">
+                        Hôm nay, chọn một câu dành cho chính mình nhé.
+                    </p>
+                </div>
+
+                <!-- 3 TÚI MÙ LỚN -->
+                <div id="blind-boxes-grid" class="grid grid-cols-3 gap-3 sm:gap-5 pt-4">
+                    <!-- Box 1 -->
+                    <div onclick="openBlindBox(0)" class="blind-card box-hover cursor-pointer bg-white rounded-3xl p-5 sm:p-7 shadow-soft border-2 border-teal-100 flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-teal-50 flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition">
+                            🎁
+                        </div>
+                        <span class="text-xs font-extrabold text-teal-700">Túi số 1</span>
+                    </div>
+
+                    <!-- Box 2 -->
+                    <div onclick="openBlindBox(1)" class="blind-card box-hover cursor-pointer bg-white rounded-3xl p-5 sm:p-7 shadow-soft border-2 border-teal-100 flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-50 flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition">
+                            🎀
+                        </div>
+                        <span class="text-xs font-extrabold text-amber-700">Túi số 2</span>
+                    </div>
+
+                    <!-- Box 3 -->
+                    <div onclick="openBlindBox(2)" class="blind-card box-hover cursor-pointer bg-white rounded-3xl p-5 sm:p-7 shadow-soft border-2 border-teal-100 flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-50 flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition">
+                            ✨
+                        </div>
+                        <span class="text-xs font-extrabold text-emerald-700">Túi số 3</span>
+                    </div>
+                </div>
+
+                <!-- KẾT QUẢ MỞ TÚI MÙ -->
+                <div id="blind-box-result" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-soft border border-teal-100 space-y-6">
+                    <div class="p-6 rounded-2xl bg-teal-50/80 border border-teal-100 space-y-3">
+                        <p class="text-xl sm:text-2xl font-black text-slate-800 leading-relaxed" id="quote-zh">
+                            🌷 做得很好，今天也有一点收获。
+                        </p>
+                        <p class="text-sm font-bold text-teal-700" id="quote-vi">
+                            Làm tốt lắm, hôm nay lại có thêm một chút thu hoạch rồi.
+                        </p>
+                    </div>
+
+                    <button onclick="goToSlide(1)" class="w-full sm:w-auto px-8 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-base rounded-2xl shadow-md transition flex items-center justify-center gap-2 mx-auto">
+                        <i class="fa-solid fa-house"></i>
+                        <span>🏠 回到首页 · Về trang chủ</span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPT CHÍNH XỬ LÝ TOÀN BỘ LOGIC -->
+    <script>
+        // DỮ LIỆU TỪ VỰNG TỪ FILE EXCEL (311 TỪ / CÂU)
+        const VOCAB_DATA = [
+            {"Bài":1,"Từ tiếng Trung":"接","Pinyin":"jiē","Nghĩa tiếng Việt":"nghe (điện thoại); đón","Ví dụ tiếng Việt":"Tôi đang nghe điện thoại.\nTôi ra sân bay đón bạn.","Ví dụ tiếng Trung":"我在接电话。\n我去机场接朋友。","Ví dụ pinyin":"Wǒ zài jiē diànhuà.\nWǒ qù jīchǎng jiē péngyou."},
+            {"Bài":1,"Từ tiếng Trung":"开会","Pinyin":"kāihuì","Nghĩa tiếng Việt":"họp","Ví dụ tiếng Việt":"Chín giờ chúng tôi họp.","Ví dụ tiếng Trung":"我们九点开会。","Ví dụ pinyin":"Wǒmen jiǔ diǎn kāihuì."},
+            {"Bài":1,"Từ tiếng Trung":"带","Pinyin":"dài","Nghĩa tiếng Việt":"mang, dẫn theo","Ví dụ tiếng Việt":"Hôm nay tôi mang theo điện thoại.","Ví dụ tiếng Trung":"我今天带手机。","Ví dụ pinyin":"Wǒ jīntiān dài shǒujī."},
+            {"Bài":1,"Từ tiếng Trung":"又","Pinyin":"yòu","Nghĩa tiếng Việt":"lại (đã xảy ra)","Ví dụ tiếng Việt":"Hôm nay anh ấy lại đến muộn.","Ví dụ tiếng Trung":"他今天又迟到了。","Ví dụ pinyin":"Tā jīntiān yòu chídào le."}
+        ];
+
+        // 15 CÂU CHÀO RANDOM SLIDE 1
+        const GREETINGS = [
+            { zh: "👋 欢迎回来！今天也要进步一点点哦～", vi: "Chào mừng bạn quay lại! Hôm nay cũng tiến bộ một chút nhé～" },
+            { zh: "🌿 欢迎回来！一点一点，慢慢变熟悉。", vi: "Chào mừng bạn quay lại! Từng chút một, từ từ trở nên quen thuộc." },
+            { zh: "🌸 欢迎回来！很高兴又见到你。", vi: "Chào mừng bạn quay lại! Rất vui lại được gặp bạn." },
+            { zh: "🌱 欢迎回来！有时间的时候，回来看看吧。", vi: "Chào mừng bạn quay lại! Khi có thời gian, hãy ghé qua ôn một chút nhé." },
+            { zh: "👋 你好！欢迎来到你的中文复习小站。", vi: "Xin chào! Chào mừng bạn đến với góc ôn tập tiếng Trung của mình." },
+            { zh: "🍀 你的中文小天地，欢迎回来！", vi: "Góc nhỏ tiếng Trung của bạn, chào mừng bạn quay lại!" },
+            { zh: "📖 今天学什么？让我们开始吧！", vi: "Hôm nay học gì đây? Cùng bắt đầu nhé!" },
+            { zh: "🌱 今日任务：让中文再靠近你一点！", vi: "Nhiệm vụ hôm nay: để tiếng Trung tiến gần bạn thêm một chút!" },
+            { zh: "☀️ 今天也来打卡吧！", vi: "Hôm nay cũng ghé qua ôn một chút nhé!" },
+            { zh: "🌷 不用着急，按照自己的节奏学习就好。", vi: "Không cần vội, cứ học theo nhịp độ của mình là được." },
+            { zh: "✨ 学过的知识，再见一次就更熟悉了。", vi: "Những điều đã học, gặp lại một lần sẽ càng quen thuộc hơn." },
+            { zh: "🌿 不求一次记住，慢慢熟悉就好。", vi: "Không cần phải nhớ ngay một lần, từ từ quen thuộc là được." },
+            { zh: "🐢 不急着走得快，慢慢走得远。", vi: "Không cần vội đi thật nhanh, cứ từ từ đi thật xa." },
+            { zh: "🌼 欢迎回来！今天的你，比昨天多懂一点点。", vi: "Chào mừng bạn quay lại! Hôm nay bạn hiểu thêm một chút so với hôm qua." },
+            { zh: "🪴 一点一点，慢慢来就好。", vi: "Từng chút một, cứ từ từ là được." }
+        ];
+
+        // 29 CÂU ĐỘNG VIÊN ĐÚNG YÊU CẦU CHO TÚI MÙ
+        const QUOTES = [
+            { zh: "🌷 做得很好，今天也有一点收获。", vi: "Làm tốt lắm, hôm nay lại có thêm một chút thu hoạch rồi." },
+            { zh: "🌱 一点一点积累，你会越来越好的！", vi: "Từng chút một tích lũy, bạn sẽ ngày càng tốt hơn!" },
+            { zh: "✨ 今天的努力，都不会白费。", vi: "Những nỗ lực hôm nay sẽ không uổng phí đâu." },
+            { zh: "🌿 慢慢来，你已经做得很好了！", vi: "Cứ từ từ thôi, bạn đã làm rất tốt rồi!" },
+            { zh: "📖 每一次复习，都是在为进步积累力量。", vi: "Mỗi lần ôn tập đều là một lần tích lũy cho sự tiến bộ." },
+            { zh: "🍀 坚持自己的节奏，慢慢进步就好。", vi: "Cứ giữ nhịp độ của riêng mình, từ từ tiến bộ là được." },
+            { zh: "🌸 今天也完成了一点点，继续加油！", vi: "Hôm nay lại hoàn thành thêm một chút rồi, tiếp tục cố lên nhé!" },
+            { zh: "🪴 别着急，慢慢学，你会越来越熟悉的。", vi: "Đừng vội, cứ từ từ học, bạn sẽ ngày càng quen thuộc hơn." },
+            { zh: "🌙 今天就到这里，辛苦了！", vi: "Hôm nay đến đây thôi, bạn đã vất vả rồi!" },
+            { zh: "💌 感谢今天的几分钟，我们下次再见！", vi: "Cảm ơn bạn vì vài phút hôm nay, hẹn gặp lại lần sau!" },
+            { zh: "☕ 今天辛苦了，有空再回来看看吧。", vi: "Hôm nay vất vả rồi, khi có thời gian lại ghé qua nhé." },
+            { zh: "🌱 记住一点，也是一种进步。", vi: "Nhớ thêm được một chút cũng là một sự tiến bộ." },
+            { zh: "👏 今天的复习完成啦，给自己一点掌声吧！", vi: "Phần ôn tập hôm nay hoàn thành rồi, hãy tự dành cho mình một tràng pháo tay nhé!" },
+            { zh: "🌸 今天先到这里，期待下次再见。", vi: "Hôm nay tạm dừng ở đây, hẹn gặp bạn lần sau." },
+            { zh: "☀️ 谢谢你的认真，祝你今天一切顺利！", vi: "Cảm ơn sự nghiêm túc của bạn, chúc bạn hôm nay mọi việc thuận lợi!" },
+            { zh: "🌿 不求一次记住，慢慢熟悉就好。", vi: "Không cần nhớ ngay một lần, từ từ quen thuộc là được." },
+            { zh: "🌷 不用每次都学很多，学一点就很好。", vi: "Không cần lần nào cũng học thật nhiều, học một chút cũng rất tốt." },
+            { zh: "✨ 每复习一次，中文就离你更近一点。", vi: "Mỗi lần ôn tập, tiếng Trung lại gần bạn thêm một chút." },
+            { zh: "🍃 今天记住的一个词，也是今天的收获。", vi: "Nhớ được một từ hôm nay cũng là một thu hoạch của hôm nay." },
+            { zh: "🌱 今天多认识一点，明天就少陌生一点。", vi: "Hôm nay biết thêm một chút, ngày mai sẽ bớt xa lạ một chút." },
+            { zh: "🌙 今天的复习，会在以后的某一天帮到你。", vi: "Buổi ôn hôm nay sẽ giúp bạn vào một ngày nào đó sau này." },
+            { zh: "🌼 现在觉得陌生的词，以后会慢慢变熟悉。", vi: "Những từ bây giờ còn thấy xa lạ rồi sẽ dần trở nên quen thuộc." },
+            { zh: "🪴 慢慢学，慢慢记，慢慢成为更好的自己。", vi: "Từ từ học, từ từ ghi nhớ, từ từ trở thành phiên bản tốt hơn của chính mình." },
+            { zh: "🌸 小小的坚持，也会带来大大的改变。", vi: "Những kiên trì nhỏ bé cũng có thể mang đến thay đổi lớn." },
+            { zh: "☀️ 今天的每一点积累，都会成为明天的底气。", vi: "Mỗi chút tích lũy hôm nay sẽ trở thành sự tự tin của ngày mai." },
+            { zh: "🐢 不急着走得快，慢慢走得远。", vi: "Không cần vội đi thật nhanh, cứ từ từ đi thật xa." },
+            { zh: "📚 一个词，一个句子，慢慢就会越来越多。", vi: "Một từ, một câu, từ từ rồi sẽ ngày càng nhiều hơn." },
+            { zh: "🌿 学过的内容，再见一次就会更熟悉。", vi: "Những điều đã học, gặp lại một lần sẽ càng quen thuộc hơn." },
+            { zh: "💛 今天花的这些时间，都很值得。", vi: "Khoảng thời gian bạn dành hôm nay đều rất đáng giá." }
+        ];
+
+        // TRẠNG THÁI ỨNG DỤNG (STATE)
+        let currentState = {
+            currentSlide: 1,
+            mode: 'vocab', // 'vocab', 'arrange', 'typing', 'mixed'
+            scopeType: 'single', // 'single', 'range', 'all'
+            singleLesson: 1,
+            rangeStart: 1,
+            rangeEnd: 5,
+            questions: [],
+            currentIndex: 0
+        };
+
+        // KHI TRANG TẢI XONG
+        window.addEventListener('DOMContentLoaded', () => {
+            initLessonSelects();
+            randomizeGreeting();
+            checkSavedProgress();
+        });
+
+        // CHUYỂN SLIDE (SPA)
+        function goToSlide(slideNum) {
+            document.querySelectorAll('.slide-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`slide-${slideNum}`).classList.add('active');
+            currentState.currentSlide = slideNum;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (slideNum === 3) {
+                resetBlindBoxesUI();
+            }
+        }
+
+        // TẠO LỰA CHỌN PHẠM VI BÀI HỌC DYNAMIC (BÀI 1 - 30)
+        function initLessonSelects() {
+            const lessons = [...new Set(VOCAB_DATA.map(item => item.Bài))].sort((a,b) => a - b);
+            const singleSelect = document.getElementById('single-lesson-select');
+            const startSelect = document.getElementById('range-start-select');
+            const endSelect = document.getElementById('range-end-select');
+
+            singleSelect.innerHTML = '';
+            startSelect.innerHTML = '';
+            endSelect.innerHTML = '';
+
+            lessons.forEach(l => {
+                singleSelect.add(new Option(`Bài ${l} · 第${l}课`, l));
+                startSelect.add(new Option(`Bài ${l}`, l));
+                endSelect.add(new Option(`Bài ${l}`, l));
+            });
+
+            endSelect.value = Math.min(5, lessons[lessons.length - 1]);
+        }
+
+        // CÂU CHÀO RANDOM
+        function randomizeGreeting() {
+            const rand = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+            document.getElementById('random-greeting-text').innerHTML = `${rand.zh}<br><span class="not-italic text-slate-500 text-xs">${rand.vi}</span>`;
+        }
+
+        // KIỂM TRA TIẾN ĐỘ DỞ TỪ LOCALSTORAGE
+        function checkSavedProgress() {
+            const saved = localStorage.getItem('hantalk_progress');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data && data.questions && data.questions.length > 0 && data.currentIndex < data.questions.length) {
+                        document.getElementById('resume-banner').classList.remove('hidden');
+                        document.getElementById('resume-text').innerText = `Đang dừng ở: Bài ${data.questions[data.currentIndex].Bài} · Câu ${data.currentIndex + 1}/${data.questions.length}`;
+                    }
+                } catch(e) {}
+            }
+        }
+
+        // BẮT ĐẦU PHIÊN MỚI
+        function startNewSession() {
+            goToSlide(2);
+            setMode('vocab');
+            setScopeType('single');
+        }
+
+        // TIẾP TỤC PHIÊN CŨ
+        function resumeSavedSession() {
+            const saved = localStorage.getItem('hantalk_progress');
+            if (saved) {
+                currentState = JSON.parse(saved);
+                goToSlide(2);
+                updateModeUI();
+                updateScopeUI();
+                renderCurrentQuestion();
+            }
+        }
+
+        // THIẾT LẬP CHẾ ĐỘ
+        function setMode(mode) {
+            currentState.mode = mode;
+            updateModeUI();
+            loadQuestions();
+        }
+
+        function updateModeUI() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('border-teal-500', 'bg-teal-50', 'text-teal-800');
+            });
+            const activeBtn = document.getElementById(`mode-btn-${currentState.mode}`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-teal-500', 'bg-teal-50', 'text-teal-800');
+            }
+        }
+
+        // THIẾT LẬP PHẠM VI BÀI HỌC
+        function setScopeType(type) {
+            currentState.scopeType = type;
+            updateScopeUI();
+            loadQuestions();
+        }
+
+        function updateScopeUI() {
+            document.querySelectorAll('.scope-type-btn').forEach(btn => {
+                btn.classList.remove('bg-teal-600', 'text-white', 'border-teal-600');
+                btn.classList.add('border-slate-200', 'text-slate-600');
+            });
+
+            const activeTab = document.getElementById(`scope-type-${currentState.scopeType}`);
+            if (activeTab) {
+                activeTab.classList.remove('border-slate-200', 'text-slate-600');
+                activeTab.classList.add('bg-teal-600', 'text-white', 'border-teal-600');
+            }
+
+            document.querySelectorAll('.scope-ctrl').forEach(ctrl => ctrl.classList.add('hidden'));
+            document.getElementById(`scope-ctrl-${currentState.scopeType}`).classList.remove('hidden');
+        }
+
+        function onScopeConfigChange() {
+            currentState.singleLesson = parseInt(document.getElementById('single-lesson-select').value);
+            currentState.rangeStart = parseInt(document.getElementById('range-start-select').value);
+            currentState.rangeEnd = parseInt(document.getElementById('range-end-select').value);
+            loadQuestions();
+        }
+
+        // LOAD DANH SÁCH CÂU HỎI THEO CHẾ ĐỘ & PHẠM VI
+        function loadQuestions() {
+            let filtered = [];
+            if (currentState.scopeType === 'single') {
+                filtered = VOCAB_DATA.filter(item => item.Bài === currentState.singleLesson);
+            } else if (currentState.scopeType === 'range') {
+                filtered = VOCAB_DATA.filter(item => item.Bài >= currentState.rangeStart && item.Bài <= currentState.rangeEnd);
+            } else {
+                filtered = [...VOCAB_DATA];
+            }
+
+            currentState.questions = filtered;
+            currentState.currentIndex = 0;
+
+            document.getElementById('completion-card').classList.add('hidden');
+            document.getElementById('practice-card').classList.remove('hidden');
+
+            renderCurrentQuestion();
+            saveProgress();
+        }
+
+        // HIỂN THỊ CÂU HỎI HIỆN TẠI
+        function renderCurrentQuestion() {
+            if (!currentState.questions || currentState.questions.length === 0) return;
+
+            if (currentState.currentIndex >= currentState.questions.length) {
+                showCompletionCard();
+                return;
+            }
+
+            const item = currentState.questions[currentState.currentIndex];
+            document.getElementById('current-badge-lesson').innerText = `Bài ${item.Bài} · 第${item.Bài}课`;
+            document.getElementById('current-item-index').innerText = currentState.currentIndex + 1;
+            document.getElementById('total-item-count').innerText = currentState.questions.length;
+
+            let effectiveMode = currentState.mode;
+            if (currentState.mode === 'mixed') {
+                const modes = ['vocab', 'arrange', 'typing'];
+                effectiveMode = modes[currentState.currentIndex % 3];
+            }
+
+            const modeNames = { vocab: '📖 Ôn từ vựng', arrange: '🧩 Sắp xếp câu', typing: '⌨️ Luyện gõ' };
+            document.getElementById('current-badge-mode').innerText = modeNames[effectiveMode] || '📖 Ôn từ vựng';
+
+            const qBody = document.getElementById('question-body');
+            qBody.innerHTML = '';
+
+            if (effectiveMode === 'vocab') {
+                renderVocabQuestion(qBody, item);
+            } else if (effectiveMode === 'arrange') {
+                renderArrangeQuestion(qBody, item);
+            } else if (effectiveMode === 'typing') {
+                renderTypingQuestion(qBody, item);
+            }
+        }
+
+        // 1. DẠNG ÔN TỪ VỰNG
+        function renderVocabQuestion(container, item) {
+            container.innerHTML = `
+                <div class="text-center space-y-4 py-4">
+                    <div class="text-4xl sm:text-5xl font-black text-slate-800 tracking-wide">${item['Từ tiếng Trung']}</div>
+                    <div class="text-lg font-bold text-teal-600">${item.Pinyin}</div>
+                    <div class="text-base font-semibold text-slate-600 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100 max-w-sm mx-auto">
+                        ${item['Nghĩa tiếng Việt']}
+                    </div>
+                    ${item['Ví dụ tiếng Trung'] ? `
+                        <div class="mt-4 p-3.5 bg-teal-50/70 rounded-2xl border border-teal-100 text-left max-w-md mx-auto space-y-1">
+                            <p class="text-xs font-extrabold text-teal-800 uppercase tracking-wider">Ví dụ:</p>
+                            <p class="text-sm font-bold text-slate-800">${item['Ví dụ tiếng Trung'].replace('\n', '<br>')}</p>
+                            <p class="text-xs font-medium text-slate-500">${item['Ví dụ tiếng Việt'].replace('\n', '<br>')}</p>
+                        </div>
+                    ` : ''}
+                    <button onclick="nextQuestion()" class="mt-4 px-8 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm rounded-2xl shadow-md transition">
+                        Next · Đã nhớ / Tiếp theo ➔
+                    </button>
+                </div>
+            `;
+        }
+
+        // 2. DẠNG SẮP XẾP CÂU
+        function renderArrangeQuestion(container, item) {
+            const rawSent = item['Ví dụ tiếng Trung'] ? item['Ví dụ tiếng Trung'].split('\n')[0] : item['Từ tiếng Trung'];
+            const translation = item['Ví dụ tiếng Việt'] ? item['Ví dụ tiếng Việt'].split('\n')[0] : item['Nghĩa tiếng Việt'];
+            
+            let chars = rawSent.replace(/[。？！，,.?]/g, '').split('');
+            let shuffled = [...chars].sort(() => Math.random() - 0.5);
+
+            container.innerHTML = `
+                <div class="space-y-5 py-2">
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Sắp xếp các ký tự thành câu đúng:</span>
+                        <p class="text-sm font-bold text-teal-700 mt-1">${translation}</p>
+                    </div>
+
+                    <!-- Ô chứa kết quả -->
+                    <div id="arrange-target" class="min-h-[56px] p-3 bg-slate-50 border-2 border-dashed border-teal-200 rounded-2xl flex flex-wrap gap-2 items-center justify-center">
+                    </div>
+
+                    <!-- Nguồn ký tự -->
+                    <div id="arrange-source" class="flex flex-wrap gap-2 justify-center">
+                        ${shuffled.map((c, idx) => `
+                            <button onclick="moveTile(this)" data-char="${c}" class="tile-btn px-3.5 py-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-800 shadow-sm hover:border-teal-400 active:scale-95 transition">
+                                ${c}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div id="arrange-feedback" class="text-center text-xs font-extrabold min-h-[20px]"></div>
+
+                    <div class="text-center">
+                        <button onclick="checkArrangeAnswer('${rawSent.replace(/[。？！，,.?]/g, '')}')" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow transition">
+                            Kiểm tra · 检查 ➔
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function moveTile(btn) {
+            const target = document.getElementById('arrange-target');
+            const source = document.getElementById('arrange-source');
+            if (btn.parentElement === source) {
+                target.appendChild(btn);
+            } else {
+                source.appendChild(btn);
+            }
+        }
+
+        function checkArrangeAnswer(correctStr) {
+            const tiles = document.querySelectorAll('#arrange-target .tile-btn');
+            const userStr = Array.from(tiles).map(t => t.getAttribute('data-char')).join('');
+            const fb = document.getElementById('arrange-feedback');
+
+            if (userStr === correctStr) {
+                fb.className = "text-center text-xs font-extrabold text-emerald-600";
+                fb.innerText = "✨ 正确！Chính xác!";
+                setTimeout(() => nextQuestion(), 800);
+            } else {
+                fb.className = "text-center text-xs font-extrabold text-rose-500";
+                fb.innerText = "❌ 再试一次！Thử lại một lần nhé!";
+            }
+        }
+
+        // 3. DẠNG LUYỆN GÕ
+        function renderTypingQuestion(container, item) {
+            const correctText = item['Từ tiếng Trung'];
+            container.innerHTML = `
+                <div class="space-y-4 text-center py-2">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gõ lại từ tiếng Trung đúng:</span>
+                        <div class="text-lg font-bold text-teal-600 mt-1">${item.Pinyin} (${item['Nghĩa tiếng Việt']})</div>
+                    </div>
+
+                    <input type="text" id="typing-input" autocomplete="off" placeholder="Gõ tiếng Trung vào đây..." 
+                        class="w-full max-w-md mx-auto px-4 py-3 text-center text-xl font-bold border-2 border-slate-200 rounded-2xl focus:border-teal-500 focus:outline-none transition">
+
+                    <div id="typing-feedback" class="text-xs font-extrabold min-h-[20px]"></div>
+
+                    <button onclick="checkTypingAnswer('${correctText}')" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow transition">
+                        Xác nhận · 确认 ➔
+                    </button>
+                </div>
+            `;
+
+            setTimeout(() => {
+                const inp = document.getElementById('typing-input');
+                if (inp) {
+                    inp.focus();
+                    inp.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') checkTypingAnswer(correctText);
+                    });
+                }
+            }, 100);
+        }
+
+        function checkTypingAnswer(correctText) {
+            const inp = document.getElementById('typing-input');
+            const fb = document.getElementById('typing-feedback');
+            if (!inp) return;
+
+            if (inp.value.trim() === correctText) {
+                fb.className = "text-center text-xs font-extrabold text-emerald-600";
+                fb.innerText = "✨ 正确！Chính xác!";
+                setTimeout(() => nextQuestion(), 800);
+            } else {
+                fb.className = "text-center text-xs font-extrabold text-rose-500";
+                fb.innerText = `❌ Đáp án đúng là: ${correctText}`;
+            }
+        }
+
+        // CHUYỂN CÂU HỎI
+        function nextQuestion() {
+            currentState.currentIndex++;
+            saveProgress();
+            renderCurrentQuestion();
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        // LƯU TIẾN ĐỘ
+        function saveProgress() {
+            localStorage.setItem('hantalk_progress', JSON.stringify(currentState));
+        }
+
+        // HOÀN THÀNH MỘT PHẦN HỌC
+        function showCompletionCard() {
+            document.getElementById('practice-card').classList.add('hidden');
+            document.getElementById('completion-card').classList.remove('hidden');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        }
+
+        function nextLearningPart(mode) {
+            setMode(mode);
+        }
+
+        function showChangeLessonInPage() {
+            document.getElementById('completion-card').classList.add('hidden');
+            document.getElementById('practice-card').classList.remove('hidden');
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+        }
+
+        // MODAL TẠM DỪNG
+        function pauseSession() {
+            document.getElementById('pause-modal').classList.remove('hidden');
+        }
+
+        function resumeSessionModal() {
+            document.getElementById('pause-modal').classList.add('hidden');
+        }
+
+        function finishSessionToBlindBox() {
+            document.getElementById('pause-modal').classList.add('hidden');
+            goToSlide(3);
+        }
+
+        // ==========================================
+        // LOGIC TÚI MÙ SLIDE 3
+        // ==========================================
+        let selectedBoxQuotes = [];
+
+        function resetBlindBoxesUI() {
+            document.getElementById('blind-boxes-grid').classList.remove('hidden');
+            document.getElementById('blind-box-result').classList.add('hidden');
+
+            // Chọn 3 câu khác nhau không trùng gần đây
+            let history = JSON.parse(localStorage.getItem('hantalk_quote_history') || '[]');
+            let available = QUOTES.filter((q, idx) => !history.includes(idx));
+
+            if (available.length < 3) {
+                history = [];
+                available = [...QUOTES];
+            }
+
+            // Shuffle available
+            available.sort(() => Math.random() - 0.5);
+            selectedBoxQuotes = available.slice(0, 3);
+        }
+
+        function openBlindBox(index) {
+            const grid = document.getElementById('blind-boxes-grid');
+            const cards = grid.querySelectorAll('.blind-card');
+            const chosenCard = cards[index];
+
+            chosenCard.classList.add('animate-shake');
+
+            setTimeout(() => {
+                const quote = selectedBoxQuotes[index] || QUOTES[0];
+                document.getElementById('quote-zh').innerText = quote.zh;
+                document.getElementById('quote-vi').innerText = quote.vi;
+
+                grid.classList.add('hidden');
+                document.getElementById('blind-box-result').classList.remove('hidden');
+
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.5 } });
+
+                // Lưu history
+                let history = JSON.parse(localStorage.getItem('hantalk_quote_history') || '[]');
+                const qIdx = QUOTES.findIndex(q => q.zh === quote.zh);
+                if (qIdx !== -1) history.push(qIdx);
+                localStorage.setItem('hantalk_quote_history', JSON.stringify(history));
+            }, 500);
+        }
+    </script>
+</body>
+</html>
