@@ -57,10 +57,10 @@
     .ribbon { position:relative; margin:0 7px; padding:1.2rem 2.4rem; background:linear-gradient(180deg,#ffffff,#f0fdfa); border-top:1px solid #99f6e4; border-bottom:1px solid #99f6e4; }
     .roller { position:absolute; top:-9px; bottom:-9px; width:14px; border-radius:8px; z-index:2; background:linear-gradient(90deg,#0f766e,#5eead4 45%,#0f766e); box-shadow:0 2px 6px rgba(15,118,110,.35); }
     .roller.rl { left:0; } .roller.rr { right:0; }
-    .ribbon-wrap.opening .ribbon { animation:ribbonOpen 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
-    .ribbon-wrap.opening .rl { animation:rollL 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
-    .ribbon-wrap.opening .rr { animation:rollR 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
-    .ribbon-wrap.opening .msg-box { animation:ribbonText .7s ease .85s both; }
+    .ribbon-wrap.opening .ribbon { animation:ribbonOpen 1.9s cubic-bezier(.3,.7,.25,1) .4s both; }
+    .ribbon-wrap.opening .rl { animation:rollL 1.9s cubic-bezier(.3,.7,.25,1) .4s both; }
+    .ribbon-wrap.opening .rr { animation:rollR 1.9s cubic-bezier(.3,.7,.25,1) .4s both; }
+    .ribbon-wrap.opening .msg-box { animation:ribbonText .9s ease 1.9s both; }
     @keyframes ribbonOpen { from { clip-path:inset(0 50% 0 50%); } to { clip-path:inset(0 0 0 0); } }
     @keyframes rollL { 0% { left:50%; transform:translateX(-50%); opacity:0; } 10% { opacity:1; } 100% { left:0; transform:none; opacity:1; } }
     @keyframes rollR { 0% { right:50%; transform:translateX(50%); opacity:0; } 10% { opacity:1; } 100% { right:0; transform:none; opacity:1; } }
@@ -157,7 +157,7 @@
 
       <!-- NỘI DUNG HỌC hiện ngay bên dưới -->
       <div id="studyArea" class="space-y-6 scroll-mt-4">
-        <div id="panel" class="glass-card rounded-3xl p-6 md:p-8 text-center border border-white"></div>
+        <div id="panel" class="hidden glass-card rounded-3xl p-6 md:p-8 text-center border border-white"></div>
 
         <div id="exWrap" class="hidden space-y-6">
           <div class="glass-card rounded-2xl p-4 space-y-2">
@@ -6640,21 +6640,34 @@ const LESSON_DATA = [
       g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v || .15, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d);
       o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + d + .05);
     }
+    let fxTimers = [];
+    function noise(t0, d, type, freq, v, f2) {
+      const a = ac(); if (!a || !SOUND) return;
+      const n = Math.max(1, a.sampleRate * d | 0), b = a.createBuffer(1, n, a.sampleRate), x = b.getChannelData(0);
+      for (let i = 0; i < n; i++) x[i] = Math.random() * 2 - 1;
+      const src = a.createBufferSource(); src.buffer = b;
+      const f = a.createBiquadFilter(), g = a.createGain(), t = a.currentTime + t0;
+      f.type = type; f.frequency.setValueAtTime(freq, t); if (f2) f.frequency.exponentialRampToValueAtTime(f2, t + d);
+      g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
+    }
     const SFX = {
+      firework() { tone(500, 0, .45, 'sine', .035, 1700); noise(.45, .55, 'lowpass', 600, .45, 70); tone(95, .45, .45, 'sine', .22, 40); for (let i = 0; i < 14; i++) noise(.55 + Math.random() * .8, .03, 'highpass', 3500, .1); },
+      pop() { noise(0, .07, 'bandpass', 1400, .35); tone(320, 0, .09, 'square', .05, 120); },
       ok() { [659, 784, 1047].forEach((f, i) => tone(f, i * .09, .38, 'sine', .17)); },
       tap() { tone(880, 0, .07, 'sine', .15); tone(1320, .03, .13, 'sine', .1); },
       hover() { tone(1568, 0, .09, 'sine', .05); tone(2093, .045, .1, 'sine', .035); },
       unroll() {
         const a = ac(); if (!a || !SOUND) return;
-        const n = a.sampleRate * .9 | 0, b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
+        const n = a.sampleRate * 1.8 | 0, b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
         for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
         const src = a.createBufferSource(); src.buffer = b;
         const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
-        const g = a.createGain(), t = a.currentTime + .3;
-        f.frequency.setValueAtTime(500, t); f.frequency.exponentialRampToValueAtTime(3000, t + .8);
-        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.09, t + .25); g.gain.exponentialRampToValueAtTime(.0001, t + .85);
+        const g = a.createGain(), t = a.currentTime + .4;
+        f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(2600, t + 1.6);
+        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.08, t + .6); g.gain.exponentialRampToValueAtTime(.0001, t + 1.75);
         src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
-        tone(1047, 1.05, .6, 'sine', .07); tone(1568, 1.15, .7, 'sine', .05);
+        tone(1047, 2.3, .7, 'sine', .07); tone(1568, 2.45, .8, 'sine', .05);
       },
       bad() { tone(330, 0, .2, 'triangle', .2); tone(247, .17, .34, 'triangle', .2); },
       shake() { for (let i = 0; i < 7; i++) tone(170 + (i % 2) * 70, i * .07, .07, 'square', .045); },
@@ -6677,16 +6690,18 @@ const LESSON_DATA = [
       const go = () => { if (a.state === 'running' && Date.now() - t0 < 1500) SFX.unroll(); };
       a.state === 'running' ? go() : a.resume().then(go).catch(() => {});
     }
+    let curWelcome = null;
     function showWelcome(animate) {
-      const w = pickUnseen(WELCOME, WKEY);
+      if (animate || !curWelcome) curWelcome = pickUnseen(WELCOME, WKEY);
+      const w = curWelcome;
       $('wCn').textContent = w.cn; $('wVi').textContent = w.vi;
       const rw = $('ribbonWrap'); rw.classList.remove('pre', 'opening');
       if (animate) { void rw.offsetWidth; rw.classList.add('opening'); tryUnroll(); }
       refreshResume();
     }
-    function goHome() { save(); showSlide(1); showWelcome(); }
+    function goHome() { fxTimers.forEach(clearTimeout); fxTimers = []; save(); showSlide(1); showWelcome(); }
     function goStudy() { showSlide(2); renderAll(); if (!S.active) renderIdle(); }
-    function goGift() { S.active = false; showSlide(3); buildGifts(); }
+    function goGift() { S.active = false; showSlide(3); buildGifts(); finale(); }
 
     // ---------- Lưu / tiếp tục ----------
     function save() {
@@ -6802,11 +6817,7 @@ const LESSON_DATA = [
       $('exWrap').classList.add('hidden'); $('panel').classList.remove('hidden');
       $('panel').innerHTML = html;
     }
-    function renderIdle() {
-      const h = !S.mode ? ['请选择练习方式', 'Hãy chọn cách luyện tập'] : !S.scope ? ['请选择课程范围', 'Hãy chọn phạm vi bài học']
-        : S.scope === 'single' ? ['请选择一课', 'Hãy chọn một bài'] : ['选好课程后，按“开始”', 'Chọn các bài rồi bấm “Bắt đầu”'];
-      panel(`<div class="msg-box" style="min-height:8rem"><p class="msg-cn">🌱 ${h[0]}</p><p class="msg-vi">${h[1]}</p></div>`);
-    }
+    function renderIdle() { $('exWrap').classList.add('hidden'); $('panel').classList.add('hidden'); $('panel').innerHTML = ''; }
     function showExercise() {
       $('panel').classList.add('hidden'); $('exWrap').classList.remove('hidden');
       showSlide(2); showQ();
@@ -6980,6 +6991,20 @@ const LESSON_DATA = [
       <g class="glid"><rect x="8" y="40" width="104" height="24" rx="8" fill="#0d9488"/><rect x="52" y="40" width="16" height="24" fill="#fbbf24"/>
       <g class="gbow"><ellipse cx="46" cy="32" rx="16" ry="11" fill="#fbbf24" transform="rotate(-20 46 32)"/><ellipse cx="74" cy="32" rx="16" ry="11" fill="#fbbf24" transform="rotate(20 74 32)"/><circle cx="60" cy="38" r="7" fill="#f59e0b"/></g></g></svg>
       <span class="spark text-sm" style="left:-4px;top:8px">✨</span><span class="spark text-xs" style="right:-2px;top:30px;animation-delay:-1.3s">✨</span>`;
+    // Pháo hoa + pháo giấy trước khi mở quà
+    function finale() {
+      fxTimers.forEach(clearTimeout); fxTimers = [];
+      const later = (ms, fn) => fxTimers.push(setTimeout(fn, ms));
+      const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const cf = o => { if (window.confetti && !calm) confetti(o); };
+      later(150, () => { SFX.pop(); cf({ particleCount: 70, angle: 60, spread: 65, origin: { x: 0, y: .85 } }); cf({ particleCount: 70, angle: 120, spread: 65, origin: { x: 1, y: .85 } }); });
+      const cols = [['#14b8a6', '#5eead4', '#fcd34d'], ['#f59e0b', '#fde68a', '#ffffff'], ['#34d399', '#a7f3d0', '#fbbf24']];
+      [[700, .3, .32], [1500, .7, .28], [2300, .5, .38]].forEach(([ms, x, y], i) => {
+        later(ms, () => SFX.firework());
+        later(ms + 450, () => cf({ particleCount: 80, startVelocity: 30, spread: 360, ticks: 80, gravity: .8, decay: .92, scalar: .85, shapes: ['circle'], colors: cols[i], origin: { x, y } }));
+      });
+      later(3100, () => { SFX.pop(); cf({ particleCount: 60, angle: 90, spread: 100, origin: { x: .5, y: .9 } }); });
+    }
     let giftOpened = false;
     function buildGifts() {
       giftOpened = false;
