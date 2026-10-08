@@ -51,20 +51,24 @@
     .lift-sm:hover { transform:translateY(-3px) scale(1.08); box-shadow:0 12px 22px -10px rgba(20,184,166,.45); border-color:#2dd4bf; background-color:#f0fdfa; }
     .lift:active,.lift-sm:active { transform:scale(.97); }
     #qChinese,#qVietnamese { text-wrap:balance; }
-    /* Ruy-băng câu chào: mở từ giữa ra hai bên */
-    .ribbon-wrap { position:relative; width:100%; max-width:56rem; margin:0 auto; filter:drop-shadow(0 12px 14px rgba(13,148,136,.18)); }
-    .ribbon { position:relative; padding:1.25rem 1.5rem; overflow:hidden; background:linear-gradient(90deg,#99f6e4 0,#f0fdfa 9%,#fff 50%,#f0fdfa 91%,#99f6e4 100%); border-top:2px solid rgba(45,212,191,.6); border-bottom:2px solid rgba(45,212,191,.6); }
-    .ribbon::before { content:""; position:absolute; inset:6px 12px; border:1px dashed rgba(20,184,166,.4); pointer-events:none; }
-    .ribbon::after { content:""; position:absolute; top:0; bottom:0; width:28%; left:-40%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent); pointer-events:none; }
-    .ribbon-wrap.opening::before { content:""; position:absolute; left:0; right:0; top:50%; height:2px; background:#2dd4bf; transform-origin:center; animation:lineGrow .55s ease-out both; z-index:2; }
+    /* Dải giấy câu chào: hai trục cuộn kéo mở sang hai bên (chỉ chạy khi mở link) */
+    .ribbon-wrap { position:relative; width:100%; max-width:52rem; margin:0 auto; filter:drop-shadow(0 10px 14px rgba(13,148,136,.16)); }
+    .ribbon-wrap.pre .ribbon, .ribbon-wrap.pre .roller { visibility:hidden; }
+    .ribbon { position:relative; margin:0 7px; padding:1.2rem 2.4rem; background:linear-gradient(180deg,#ffffff,#f0fdfa); border-top:1px solid #99f6e4; border-bottom:1px solid #99f6e4; }
+    .roller { position:absolute; top:-9px; bottom:-9px; width:14px; border-radius:8px; z-index:2; background:linear-gradient(90deg,#0f766e,#5eead4 45%,#0f766e); box-shadow:0 2px 6px rgba(15,118,110,.35); }
+    .roller.rl { left:0; } .roller.rr { right:0; }
     .ribbon-wrap.opening .ribbon { animation:ribbonOpen 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
-    .ribbon-wrap.opening .ribbon .msg-box { animation:ribbonText .7s ease .85s both; }
-    .ribbon-wrap.opening .ribbon::after { animation:sheen 1.2s ease 1.35s both; }
-    @keyframes ribbonOpen { 0% { clip-path:inset(0 50% 0 50%); } 100% { clip-path:inset(0 0 0 0); } }
-    @keyframes ribbonText { 0% { opacity:0; transform:scale(.97); } 100% { opacity:1; transform:none; } }
-    @keyframes lineGrow { 0% { transform:scaleX(0); opacity:1; } 60% { transform:scaleX(1); opacity:1; } 100% { transform:scaleX(1); opacity:0; } }
-    @keyframes sheen { to { left:120%; } }
-    @media (prefers-reduced-motion:reduce) { .ribbon-wrap.opening::before,.ribbon-wrap.opening .ribbon,.ribbon-wrap.opening .ribbon .msg-box,.ribbon-wrap.opening .ribbon::after { animation:none !important; } }
+    .ribbon-wrap.opening .rl { animation:rollL 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
+    .ribbon-wrap.opening .rr { animation:rollR 1.1s cubic-bezier(.22,.8,.25,1) .3s both; }
+    .ribbon-wrap.opening .msg-box { animation:ribbonText .7s ease .85s both; }
+    @keyframes ribbonOpen { from { clip-path:inset(0 50% 0 50%); } to { clip-path:inset(0 0 0 0); } }
+    @keyframes rollL { 0% { left:50%; transform:translateX(-50%); opacity:0; } 10% { opacity:1; } 100% { left:0; transform:none; opacity:1; } }
+    @keyframes rollR { 0% { right:50%; transform:translateX(50%); opacity:0; } 10% { opacity:1; } 100% { right:0; transform:none; opacity:1; } }
+    @keyframes ribbonText { from { opacity:0; transform:scale(.97); } to { opacity:1; transform:none; } }
+    @media (prefers-reduced-motion:reduce) { .ribbon-wrap.opening .ribbon, .ribbon-wrap.opening .roller, .ribbon-wrap.opening .msg-box { animation:none !important; } }
+    .lift-btn { transition:transform .2s ease,box-shadow .2s ease; }
+    .lift-btn:hover { transform:translateY(-3px); box-shadow:0 14px 24px -10px rgba(13,148,136,.5); }
+    .lift-btn:active { transform:scale(.97); }
   </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
@@ -107,7 +111,7 @@
             </div>
             <span class="h-px w-10 md:w-28 bg-gradient-to-l from-transparent to-teal-300"></span>
           </div>
-          <div id="ribbonWrap" class="ribbon-wrap"><div class="ribbon"><div class="msg-box" style="min-height:8rem"><p id="wCn" class="msg-cn"></p><p id="wVi" class="msg-vi"></p></div></div></div>
+          <div id="ribbonWrap" class="ribbon-wrap pre"><span class="roller rl"></span><span class="roller rr"></span><div class="ribbon"><div class="msg-box" style="min-height:8rem"><p id="wCn" class="msg-cn"></p><p id="wVi" class="msg-vi"></p></div></div></div>
           <button onclick="SFX.tap();goStudy()" class="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-lg shadow-xl shadow-teal-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all mx-auto">
             ▶️ 开始复习 · Bắt đầu ôn tập
           </button>
@@ -120,7 +124,7 @@
                   <p id="resumeCardText" class="text-xs text-slate-600 mt-0.5"></p>
                 </div>
               </div>
-              <button onclick="resumeSaved()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm transition-all shadow-md shadow-teal-600/20">▶️ 继续 · Tiếp tục</button>
+              <button onclick="resumeSaved()" class="lift-btn w-full sm:w-auto px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md shadow-teal-600/20">▶️ 继续 · Tiếp tục</button>
             </div>
           </div>
         </div>
@@ -145,7 +149,7 @@
             <span class="text-teal-600 font-bold">➔</span>
             <select id="rTo" class="p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-700"></select>
             <button onclick="pickRange()" class="px-3 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">选择 · Chọn khoảng</button>
-            <button onclick="startSession()" class="ml-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold shadow-md shadow-teal-600/20">▶️ 开始 · Bắt đầu</button>
+            <button onclick="startSession()" class="lift-btn ml-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold shadow-md shadow-teal-600/20">▶️ 开始 · Bắt đầu</button>
           </div>
           <p id="scopeInfo" class="text-xs text-teal-700 font-medium"></p>
         </div>
@@ -177,12 +181,12 @@
             <hr class="border-slate-100">
             <div id="interactiveArea" class="min-h-[160px] w-full max-w-3xl mx-auto flex flex-col justify-center"></div>
             <div id="feedbackBox" class="hidden w-full max-w-3xl mx-auto rounded-2xl p-4 text-center text-base font-medium animate-pop-in">
-              <p id="feedbackChinese" class="font-bold text-base"></p>
-              <p id="feedbackVietnamese" class="text-sm mt-1 opacity-90" style="white-space:pre-line"></p>
+              <p id="feedbackChinese" class="font-extrabold text-xl md:text-2xl"></p>
+              <p id="feedbackVietnamese" class="text-lg md:text-xl font-semibold mt-2" style="white-space:pre-line"></p>
             </div>
             <div class="pt-2 w-full max-w-3xl mx-auto">
-              <button id="btnCheckAnswer" onclick="checkAnswer()" class="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base transition-all shadow-md shadow-teal-600/20"></button>
-              <button onclick="pauseSession()" class="w-full mt-3 py-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-teal-300 text-slate-700 font-semibold text-sm transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-pause text-teal-600"></i> 暂停 · Tạm dừng</button>
+              <button id="btnCheckAnswer" onclick="checkAnswer()" class="lift-btn w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base shadow-md shadow-teal-600/20"></button>
+              <button onclick="pauseSession()" class="lift-sm w-full mt-3 py-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-teal-300 text-slate-700 font-semibold text-sm transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-pause text-teal-600"></i> 暂停 · Tạm dừng</button>
             </div>
           </div>
         </div>
@@ -199,7 +203,7 @@
       <div id="giftGrid" class="flex justify-center gap-4 md:gap-12 pt-4"></div>
       <div id="quoteArea" class="quote-area glass-card rounded-3xl p-6 max-w-2xl mx-auto text-center border-2 border-amber-300 bg-amber-50/40 flex flex-col items-center justify-center gap-4">
         <div class="msg-box" style="min-height:7.5rem"><p id="quoteCn" class="msg-cn"></p><p id="quoteVi" class="msg-vi"></p></div>
-        <button onclick="goHome()" class="px-8 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/20 transition-all">🏠 回到首页 · Về trang chủ</button>
+        <button onclick="goHome()" class="lift-btn px-8 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/20">🏠 回到首页 · Về trang chủ</button>
       </div>
     </section>
   </main>
@@ -6620,7 +6624,7 @@ const LESSON_DATA = [
     ];
     const TYPE_TITLE = { v: '词汇卡片 · Từ vựng', a: '连词成句 · Sắp xếp câu', t: '打字练习 · Luyện gõ' };
 
-    const S = { mode: null, scope: null, lesson: null, multi: [], qs: [], idx: 0, score: 0, ans: 0, aw: 0, as: 0, wrong: [], review: false, active: false, tries: 0, sel: null };
+    const S = { mode: null, scope: null, lesson: null, multi: [], qs: [], idx: 0, score: 0, ans: 0, aw: 0, as: 0, wrong: [], done: [], review: false, active: false, tries: 0, sel: null };
 
     // ---------- Âm thanh (tạo bằng Web Audio, không cần file) ----------
     let AC = null, SOUND = LS.get('hsk2_sound', true);
@@ -6640,7 +6644,18 @@ const LESSON_DATA = [
       ok() { [659, 784, 1047].forEach((f, i) => tone(f, i * .09, .38, 'sine', .17)); },
       tap() { tone(880, 0, .07, 'sine', .15); tone(1320, .03, .13, 'sine', .1); },
       hover() { tone(1568, 0, .09, 'sine', .05); tone(2093, .045, .1, 'sine', .035); },
-      unroll() { tone(200, 0, .75, 'sawtooth', .02, 1000); },
+      unroll() {
+        const a = ac(); if (!a || !SOUND) return;
+        const n = a.sampleRate * .9 | 0, b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
+        for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+        const src = a.createBufferSource(); src.buffer = b;
+        const f = a.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
+        const g = a.createGain(), t = a.currentTime + .3;
+        f.frequency.setValueAtTime(500, t); f.frequency.exponentialRampToValueAtTime(3000, t + .8);
+        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.09, t + .25); g.gain.exponentialRampToValueAtTime(.0001, t + .85);
+        src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
+        tone(1047, 1.05, .6, 'sine', .07); tone(1568, 1.15, .7, 'sine', .05);
+      },
       bad() { tone(330, 0, .2, 'triangle', .2); tone(247, .17, .34, 'triangle', .2); },
       shake() { for (let i = 0; i < 7; i++) tone(170 + (i % 2) * 70, i * .07, .07, 'square', .045); },
       open() { tone(260, 0, .45, 'sawtooth', .05, 1400); [784, 988, 1175, 1568, 1976].forEach((f, i) => { tone(f, .3 + i * .09, .5, 'sine', .13); tone(f * 2, .3 + i * .09, .3, 'triangle', .035); }); }
@@ -6656,11 +6671,17 @@ const LESSON_DATA = [
       if (curSlide !== n) window.scrollTo({ top: 0 });
       curSlide = n;
     }
-    function showWelcome() {
+    // Chỉ chạy hiệu ứng mở ruy-băng khi vừa mở link; quay về trang chủ thì hiện sẵn
+    function tryUnroll() {
+      if (!SOUND) return; const a = ac(); if (!a) return; const t0 = Date.now();
+      const go = () => { if (a.state === 'running' && Date.now() - t0 < 1500) SFX.unroll(); };
+      a.state === 'running' ? go() : a.resume().then(go).catch(() => {});
+    }
+    function showWelcome(animate) {
       const w = pickUnseen(WELCOME, WKEY);
       $('wCn').textContent = w.cn; $('wVi').textContent = w.vi;
-      const rw = $('ribbonWrap'); rw.classList.remove('opening'); void rw.offsetWidth; rw.classList.add('opening');
-      if (AC && AC.state === 'running') SFX.unroll();
+      const rw = $('ribbonWrap'); rw.classList.remove('pre', 'opening');
+      if (animate) { void rw.offsetWidth; rw.classList.add('opening'); tryUnroll(); }
       refreshResume();
     }
     function goHome() { save(); showSlide(1); showWelcome(); }
@@ -6670,7 +6691,7 @@ const LESSON_DATA = [
     // ---------- Lưu / tiếp tục ----------
     function save() {
       if (!S.qs.length) return;
-      LS.set(SKEY, { mode: S.mode, scope: S.scope, lesson: S.lesson, multi: S.multi, qs: S.qs, idx: S.idx, score: S.score, ans: S.ans, aw: S.aw, as: S.as, wrong: S.wrong, review: S.review });
+      LS.set(SKEY, { mode: S.mode, scope: S.scope, lesson: S.lesson, multi: S.multi, qs: S.qs, idx: S.idx, score: S.score, ans: S.ans, aw: S.aw, as: S.as, wrong: S.wrong, done: S.done, review: S.review });
     }
     function clearSaved() { LS.del(SKEY); refreshResume(); }
     function refreshResume() {
@@ -6771,7 +6792,7 @@ const LESSON_DATA = [
       const qs = buildQs(S.mode, ls);
       if (!qs.length) return notice('提示 · Thông báo', 'Phạm vi này chưa có đủ dữ liệu cho dạng bài đã chọn. Bạn thử chọn lại nhé.');
       const k = keep === true;
-      Object.assign(S, { qs, idx: 0, review: false, active: true, score: k ? S.score : 0, ans: k ? S.ans : 0, aw: k ? S.aw : 0, as: k ? S.as : 0, wrong: k ? S.wrong : [] });
+      Object.assign(S, { qs, idx: 0, review: false, active: true, score: k ? S.score : 0, ans: k ? S.ans : 0, aw: k ? S.aw : 0, as: k ? S.as : 0, wrong: k ? S.wrong : [], done: k ? S.done : [] });
       save(); showSlide(2); showExercise();
       $('studyArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -6793,19 +6814,23 @@ const LESSON_DATA = [
     function unitText() { return S.as > 0 && S.aw === 0 ? ['句子', 'câu'] : ['词', 'từ']; }
 
     function finishQs() {
-      S.idx = S.qs.length; S.active = true; save(); showSlide(2);
-      const others = MODES.filter(m => m[0] !== S.mode);
-      const [u, uv] = unitText();
+      S.idx = S.qs.length; S.active = true;
+      if (!S.done.includes(S.mode)) S.done.push(S.mode);
+      save(); showSlide(2);
+      const uv = unitText()[1];
       panel(`<div class="space-y-5 animate-pop-in">
         <div class="text-3xl">🌿</div>
-        <div><h3 class="text-xl font-extrabold text-slate-800">这一部分完成啦！</h3><p class="text-sm text-teal-600 font-medium">Bạn đã hoàn thành phần này! · 已复习 Đã ôn: ${S.ans} ${uv}</p></div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          ${others.map(([k, ic, , cn, vi]) => `<button onclick="continueWith('${k}')" class="px-4 py-3 rounded-xl border-2 border-teal-500 bg-teal-50/60 hover:bg-teal-50 text-teal-800 text-left shadow-sm transition-all"><p class="font-bold text-sm">${ic} ${cn} · ${vi}</p><p class="text-[11px] opacity-80">下一部分 · Phần tiếp theo</p></button>`).join('')}
+        <div><h3 class="text-xl md:text-2xl font-extrabold text-slate-800">这一部分完成啦！</h3><p class="text-sm md:text-base text-teal-600 font-medium">Bạn đã hoàn thành phần này! · 已复习 Đã ôn: ${S.ans} ${uv}</p></div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          ${MODES.map(([k, ic, , cn, vi]) => { const d = S.done.includes(k); return `<button onclick="continueWith('${k}')" class="lift relative px-3 py-4 rounded-xl text-center border-2 ${d ? 'border-emerald-300 bg-emerald-50/70 text-emerald-800' : 'border-teal-500 bg-teal-50/60 text-teal-800'} shadow-sm">
+            ${d ? '<span class="absolute top-2 right-2 w-5 h-5 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center"><i class="fa-solid fa-check"></i></span>' : ''}
+            <p class="text-2xl">${ic}</p><p class="font-bold text-sm mt-1">${cn}</p><p class="text-xs opacity-80">${vi}</p>
+            <p class="text-[11px] mt-1.5 font-semibold">${d ? '已完成 · Đã hoàn thành' : '下一部分 · Phần tiếp theo'}</p></button>`; }).join('')}
         </div>
-        <div class="grid grid-cols-3 gap-2 pt-1">
-          <button onclick="changeLesson()" class="py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold">📖 换一课<br>Đổi bài</button>
-          <button onclick="pauseSession()" class="py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold">⏸️ 暂停<br>Tạm dừng</button>
-          <button onclick="endSession(false)" class="py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold">🌙 结束<br>Kết thúc</button>
+        <div class="grid grid-cols-3 gap-3 pt-1">
+          <button onclick="changeLesson()" class="lift-sm py-3 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold">📖 换一课<br>Đổi bài</button>
+          <button onclick="pauseSession()" class="lift-sm py-3 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold">⏸️ 暂停<br>Tạm dừng</button>
+          <button onclick="endSession(false)" class="lift-sm py-3 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold">🌙 结束<br>Kết thúc</button>
         </div></div>`);
     }
     function continueWith(m) { S.mode = m; renderModes(); startSession(true); }
@@ -6819,9 +6844,9 @@ const LESSON_DATA = [
       panel(`<div class="space-y-5 max-w-sm mx-auto animate-pop-in">
         <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">⏸️</div>
         <div><h3 class="text-xl font-bold text-slate-800">稍作休息 · Nghỉ tay một chút nhé</h3></div>
-        <button onclick="S.idx>=S.qs.length?finishQs():showExercise()" class="w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-base shadow-lg shadow-teal-600/30 transition-all">▶️ 继续复习<br><span class="text-xs font-semibold opacity-90">Tiếp tục ôn tập</span></button>
+        <button onclick="S.idx>=S.qs.length?finishQs():showExercise()" class="lift-btn w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-base shadow-lg shadow-teal-600/30">▶️ 继续复习<br><span class="text-xs font-semibold opacity-90">Tiếp tục ôn tập</span></button>
         <div class="pt-3 border-t border-slate-200/80">
-          <button onclick="endSession(true)" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors">🌙 结束本次复习<br>Tạm dừng &amp; kết thúc phiên</button>
+          <button onclick="endSession(true)" class="lift-sm w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-sm">🌙 结束本次复习<br>Tạm dừng &amp; kết thúc phiên</button>
         </div>
         <p class="text-xs text-teal-600 font-medium">Quay lại sau cũng được, tiến độ sẽ được lưu.<br>随时回来，进度都会保存。</p></div>`);
     }
@@ -6836,8 +6861,8 @@ const LESSON_DATA = [
         <div class="text-3xl">🌙</div>
         <div class="msg-box" style="min-height:6rem"><p class="msg-cn">今天复习了${S.ans}个${u}。</p><p class="msg-vi">Hôm nay bạn đã ôn ${S.ans} ${uv}.</p>
           ${n ? `<p class="msg-cn mt-3" style="font-size:1.05rem">有${n}道题可以再看一遍。</p><p class="msg-vi">Có ${n} câu bạn có thể xem lại một lần nữa.</p>` : ''}</div>
-        ${n ? `<button onclick="startReview()" class="w-full py-3 rounded-2xl bg-white border-2 border-teal-500 hover:bg-teal-50 text-teal-800 font-bold text-sm transition-all">🔄 再复习错题<br><span class="text-xs font-semibold">Ôn lại câu sai</span></button>` : ''}
-        <button onclick="goGift()" class="w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-lg shadow-teal-600/30 transition-all">🌙 结束，期待下次再见<br><span class="text-xs font-semibold opacity-90">Kết thúc, hẹn gặp lại lần sau</span></button></div>`);
+        ${n ? `<button onclick="startReview()" class="lift-sm w-full py-3 rounded-2xl bg-white border-2 border-teal-500 text-teal-800 font-bold text-sm">🔄 再复习错题<br><span class="text-xs font-semibold">Ôn lại câu sai</span></button>` : ''}
+        <button onclick="goGift()" class="lift-btn w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-lg shadow-teal-600/30">🌙 结束，期待下次再见<br><span class="text-xs font-semibold opacity-90">Kết thúc, hẹn gặp lại lần sau</span></button></div>`);
     }
     function startReview() {
       S.qs = shuf(S.wrong).map(r => ({ ...r })); S.wrong = []; S.idx = 0; S.review = true; S.active = true;
@@ -6909,7 +6934,7 @@ const LESSON_DATA = [
     }
     function answerLine(r, it) {
       if (r.t === 'a') return it.py;
-      return `${it.cn} (${it.py}) — ${it.vi}`;
+      return `${it.cn} (${it.py})\n${it.vi}`;
     }
     function checkAnswer() {
       const r = S.qs[S.idx], it = item(r); let ok = false, empty = false;
@@ -6982,7 +7007,7 @@ const LESSON_DATA = [
 
     // ---------- Khởi động ----------
     LS.del('hsk2_progress_saved'); // phiên cũ ở định dạng cũ, không tương thích
-    soundIcon(); showWelcome();
+    soundIcon(); showWelcome(true);
   </script>
 </body>
 </html>
